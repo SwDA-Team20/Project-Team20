@@ -6,26 +6,23 @@
     - *Context diagram*
     - *Container diagram*
     - *Components diagrams (motivate decisions if you may need to discard specific containers)*
-- *Tooling
+- *Tooling*
     - https://c4model.com/tooling
     - *indicate what you used in the report*
 - *Max 2500 words, excluding diagrams*
 
 
 ## Context level
-Context level: diagram and explanations
+*Context level: diagram and explanations*
 
 ## Container level
-Container level: diagram and explanations
-•
-Did you find any relationship with the Clean Architecture blueprint?
+*Container level: diagram and explanations. \
+Did you find any relationship with the Clean Architecture blueprint?*
 
 ## Component level
-Component level: diagrams and explanations
-•
-Did you observe any violation of SOLID principles at level 3 ?
+*Component level: diagrams and explanations. \
+Did you observe any violation of SOLID principles at level 3 ?*
 
 ## Architectural level
-Architectural characteristics: comment on important architectural characteristics/qualities of the system and how they are supported by the architecture
-•
-You might also use components coupling and cohesion metrics to support your reasoning
+*Architectural characteristics: comment on important architectural characteristics/qualities of the system and how they are supported by the architecture. \
+You might also use components coupling and cohesion metrics to support your reasoning.*
