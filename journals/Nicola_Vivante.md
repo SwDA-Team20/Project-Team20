@@ -1,0 +1,3 @@
+# 2026/04/26
+
+I looked at some of the system code looking for examples of design patterns (my task in the project) and I found a few occurrences of the Singleton pattern, the factory method (I believe). In order to help me with the analysis I tried to find a way to generate class diagrams from the c++ source code, but it turns out it's more complicated than I anticipated (still haven't found a way)
