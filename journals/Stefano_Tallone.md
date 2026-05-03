@@ -1,6 +1,6 @@
 # Stefano Tallone
 
-## April 13-19
+## April 13 - 19
 
 | Hours | Activity | Description | Commit |
 | ----- | -------- | ----------- | ------ |
@@ -8,7 +8,7 @@
 | 0.5 | Repository creation and setup | Created the repository with the "docs" directory and defined the structure | 633dc14 <br> 095cf4f |
 | 0.5 | Journals directory definition | Created the journals directory | c5382a2 |
 
-## April 20-26
+## April 20 - 26
 
 | Hours | Activity | Description | Commit |
 | ----- | -------- | ----------- | ------ |
@@ -17,4 +17,9 @@
 
 | Hours | Activity | Description | Commit |
 | ----- | -------- | ----------- | ------ |
-| 5 | Code dependencies | Analyzed code dependencies using doxygen | 
+| 5 | Code dependencies | Analyzed code dependencies using doxygen | 10d91cc |
+
+## May 4 - 10
+
+| Hours | Activity | Description | Commit |
+| ----- | -------- | ----------- | ------ |
