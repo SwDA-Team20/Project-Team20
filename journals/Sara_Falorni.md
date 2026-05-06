@@ -6,3 +6,6 @@ I choose to use structurizr lite and plantuml to model the diagrams. I worked on
 
 ### 05/05/2026
 Finalized the container diagram draft and committed changes to the repo.
+
+### 06/05/2026
+I've written the first draft of the explanations for the context and container diagrams, and the correlation with the clean architecture. I corrected the diagrams to use the correct colors for external systems and people. 

@@ -1,11 +1,11 @@
 workspace "Jolt Physics - C4 Architecture" {
 
     model {
-        dev = person "Game Developer" "Integrates Jolt Physics into a game engine, VR application etc."
+        dev = person "Game Developer" "Integrates Jolt Physics into a game engine, VR application etc." External
 
-        gameApp = softwareSystem "Game/Simulation Application" "External host application or engine that embeds Jolt Physics and drives the simulation."
-        toolchain = softwareSystem "C++ Build Toolchain" "CMake, compiler, linker, and platform used to build and link Jolt."
-        platform = softwareSystem "Operating System/Hardware Platform" "Provides CPU execution, memory, threading and optional platform APIs."
+        gameApp = softwareSystem "Game/Simulation Application" "External host application or engine that embeds Jolt Physics and drives the simulation." External
+        toolchain = softwareSystem "C++ Build Toolchain" "CMake, compiler, linker, and platform used to build and link Jolt." External
+        platform = softwareSystem "Operating System/Hardware Platform" "Provides CPU execution, memory, threading and optional platform APIs." External
 
         jolt = softwareSystem "Jolt Physics" "C++17 rigid-body physics and collision-detection library." {
             joltLib = container "Jolt Physics Library" "Provides rigid-body simulation, collision detection, constraints, character and vehicle support, serialization, math, memory, and job-system infrastructure." "C++17 static/shared library"
@@ -46,5 +46,12 @@ workspace "Jolt Physics - C4 Architecture" {
         }
 
         theme default
+
+        styles {
+            element "External" {
+                background "#999999"
+                color "#ffffff"
+            }
+        }
     }
 }
