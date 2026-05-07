@@ -11,4 +11,17 @@ I mainly focused on navigating through the repository structure and following th
 - Purpose of different folders.  
 - General flow and organization of the system  
 
+## Journal Entry – 7 May
 
+### Activity: Deep exploration of the codebase
+
+I spent time going deeper into the codebase to really understand how things are working internally.
+
+I focused on a few important classes and tried to figure out what each one does, how they are structured, and how they interact with other parts of the system. 
+
+I also used Doxygen to generate documentation, which made it easier to see the relationships between classes and understand the methods in a more organized way.
+
+
+### What I understood
+- Understanding how classes work   
+- Getting a clearer picture of the internal design of the project 
