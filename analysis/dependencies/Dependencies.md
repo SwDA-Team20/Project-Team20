@@ -4,15 +4,16 @@
 
 To evaluate the dependencies among the software modules within the core Jolt Physics library, we employed this approach:
 
-1. **Code Dependencies (Static Analysis):** We utilized **Doxygen** in conjunction with **Graphviz (Dot)** to parse the source code and extract structural dependencies. We configured Doxygen to recursively scan the directory and generate inclusion and inverse-inclusion graphs (with a maximum graph depth of 3). This allowed us to map afferent (incoming) and efferent (outgoing) coupling visually.
+1. **Code Dependencies (Static Analysis):** We utilized **Doxygen** in conjunction with **Graphviz** to parse the source code and extract structural dependencies. We configured Doxygen to recursively scan the directory and generate inclusion and inverse-inclusion graphs (with a maximum graph depth of 3). This allowed us to map afferent (incoming) and efferent (outgoing) coupling visually.
 2. **Knowledge Dependencies (Behavioral Analysis):** To assess co-change frequencies (temporal coupling), we utilized **CodeScene**. By analyzing the Git commit history of the repository, we identified sets of files that are frequently modified together within the same commit. This approach allowed us to uncover implicit logical or architectural coupling between modules that might not be visible through traditional static analysis.
+3. **Automated cross-referencing:** To rigorously identify hidden dependencies, we developed custom Python scripts to extract a pure `#include` matrix directly from the source code and mathematically intersect it with the temporal coupling dataset. This pipeline systematically isolated instances where high temporal coupling exists without any underlying structural link.
 
 ### 1.2 Code Dependencies Results 
 
 #### Files with the Most Dependencies
-The files exhibiting the highest number of outgoing dependencies are central implementation files (`.cpp`) that act as orchestrators or manage complex geometry and simulation logic:
+The files exhibiting the highest number of outgoing dependencies are central implementation files that act as orchestrators or manage complex geometry and simulation logic:
 
-* **`MeshShape.cpp` (36 dependencies):** This file handles complex mesh-based collision detection. Its high dependency count is justified by the need to interact with bounding volume hierarchies (BVH), triangle intersection algorithms, and various collision interfaces.
+* **`MeshShape.cpp` (36 dependencies):** This file handles complex mesh-based collision detection. Its high dependency count is justified by the need to interact with BVH (Bounding Volume Hierarchies), triangle intersection algorithms, and various collision interfaces.
 ![MeshShape.cpp Dependency Graph](./images/mesh_shape_graph.svg)
 
 * **`PhysicsSystem.cpp` (31 dependencies):** This is the core orchestrator of the JoltPhysics engine. It coordinates bodies, constraints, shapes, and the simulation steps. Its high coupling is a natural consequence of its role as the central "hub" or Facade of the engine.
@@ -22,7 +23,7 @@ The files exhibiting the highest number of outgoing dependencies are central imp
 ![HeightFieldShape.cpp Dependency Graph](./images/height_field_shape_graph.svg)
 
 #### Files with the Least Dependencies
-Conversely, a large number of header files (`.h`) exhibit zero outgoing dependencies. We can categorize them into two main architectural groups:
+By contrast, a large number of header files (`.h`) exhibit zero outgoing dependencies. They can be categorized into two main architectural groups:
 
 * **Foundational Math & Utilities:** Files such as `Vector.h`, `Plane.h`, `Math.h`, `Color.h`, and `Memory.h`. 
 * **Enums and Configuration:** Files such as `BodyType.h`, `MotionType.h`, and `PhysicsSettings.h`.
@@ -51,15 +52,22 @@ These components have a high degree of responsibility but must maintain a low de
 #### Results and Inconsistencies
 While several frequent co-changes were consistent with our static code dependencies, our analysis revealed significant **inconsistencies**, cases where files change together structurally but lack a direct code link (`#include`).
 
-The most prominent example of this inconsistency is found in the serialization modules:
-
-*   **`ObjectStreamBinaryIn.cpp`** and **`ObjectStreamBinaryOut.cpp`**
-    *   **Temporal Coupling:** 100% (co-changed across 6 specific revisions).
-    *   **The Inconsistency:** These two files exhibit a perfect knowledge dependency, meaning developers always update them simultaneously. However, cross-referencing this with our Doxygen analysis confirms **zero code dependencies** between them. An input stream has no structural reason to include an output stream.
-    *   **Architectural Reason:** This inconsistency highlights a strict, implicit protocol dependency: the binary file format. If a developer modifies the engine to serialize a new physical property (e.g., writing a new float to the buffer in `Out`), they must logically mirror that exact change in the parsing sequence (`In`). The coupling is purely conceptual, driven by the need to maintain symmetric data handling rather than structural code execution.
+* The most prominent example of this inconsistency is found in the serialization modules **`ObjectStreamBinaryIn.cpp`** and **`ObjectStreamBinaryOut.cpp`** shows a temporal coupling around 100%.
+    * These two files exhibit a perfect knowledge dependency, meaning developers always update them simultaneously. However, cross-referencing this with Doxygen analysis confirms zero code dependencies between them. An input stream has no structural reason to include an output stream.
+    * This inconsistency highlights a strict, implicit protocol dependency: the binary file format. If a developer modifies the engine to serialize a new physical property (e.g., writing a new float to the buffer in `Out`), they must logically mirror that exact change in the parsing sequence (`In`). The coupling is purely conceptual, driven by the need to maintain symmetric data handling rather than structural code execution.
 
 * Another notable pattern of inconsistency was found among the geometric shape decorators and modifiers. Files such as `RotatedTranslatedShape.cpp`, `OffsetCenterOfMassShape.cpp`, and `ScaledShape.cpp` frequently co-change (showing an 85%-88% coupling).
-While they do not include each other structurally, they are logically coupled because they all belong to the same family of the Decorator Design Pattern. They implement specific modifiers over the base Shape class. Whenever the underlying geometric API evolves all these concrete implementations must be updated in bulk to support the new feature. This is a classic example of a "Hidden Dependency" driven by the inheritance tree and polymorphic design: the compiler will not warn developers about missing updates until instantiation, making this knowledge dependency a potential source of technical debt if not properly documented for new contributors.
+While they do not include each other structurally, they are logically coupled because they all belong to the same family of the Decorator Design Pattern. They implement specific modifiers over the base Shape class. Whenever the underlying geometric API evolves all these concrete implementations must be updated in bulk to support the new feature. This is an example of  "Hidden Dependency" driven by the inheritance tree and polymorphic design: the compiler will not warn developers about missing updates until instantiation, making this knowledge dependency a potential source of technical debt if not properly documented for new contributors.
 
-#### Summary
-In conclusion, the dependency analysis reveals that JoltPhysics is a highly modular engine with a well-defined layered architecture. Code dependencies properly flow towards highly cohesive, independent mathematical foundations. However, our behavioral analysis proves that developers must remain aware of implicit knowledge dependencies, particularly concerning data serialization and decorator patterns, where structural decoupling does not prevent logical coupling.
+### 1.4 Quantitative Synthesis
+
+To provide a comprehensive quantitative view, we applied Python scripts to cross-reference the static analysis (1925 code dependencies) with the behavioral dataset. Out of the 171 highly coupled architectural pairs extracted from CodeScene, our script isolated 135 architectural inconsistencies:
+
+1.  **High Code / High Knowledge:** Exactly 36 pairs (approx. 21%) of the highly co-changed modules fall here. These are tightly coupled subsystems where structural links (`#include`) properly document the need for simultaneous updates. *(Note: CodeScene inherently filters out trivial `.cpp`/`.h` couplings, keeping this number representative of true cross-module links).*
+2.  **High Code / Low Knowledge:** Modules like core math headers exhibit massive afferent coupling (included across the 1925 static links) but zero temporal coupling, proving the foundation layers are extremely stable and decoupled from behavioral volatility.
+3.  **Low Code / High Knowledge (The Inconsistencies):** The vast majority of our filtered dataset, 135 pairs (approx. 79%), represent hidden dependencies with no structural `#include` links. Beyond the serialization protocol mentioned above, our automated extraction highlighted textbook examples of cross-platform parallel evolution (e.g., `RendererDX12.cpp` co-changing with `RendererMTL.mm`) and sibling-class synchronized updates (e.g., `ConeConstraint.cpp` and `DistanceConstraint.cpp`).
+
+By analyzing this dataset, it is quantitatively clear that while the overall static architecture is clean, a massive portion of the engine's evolutionary dynamics relies on implicit knowledge, platform parity requirements, and polymorphic hierarchies that static analysis alone cannot map.
+
+### 1.5 Summary
+In conclusion, the dependency analysis reveals that JoltPhysics is a highly modular engine with a well-defined layered architecture. Code dependencies properly flow towards highly cohesive, independent mathematical foundations. However, our behavioral analysis proves that developers must remain aware of implicit knowledge dependencies, because structural decoupling does not prevent logical coupling.
