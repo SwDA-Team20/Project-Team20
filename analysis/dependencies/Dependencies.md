@@ -4,9 +4,9 @@
 
 To evaluate the dependencies among the software modules within the core Jolt Physics library, we employed this approach:
 
-1. **Code Dependencies (Static Analysis):** We utilized **Doxygen** in conjunction with **Graphviz** to parse the source code and extract structural dependencies. We configured Doxygen to recursively scan the directory and generate inclusion and inverse-inclusion graphs (with a maximum graph depth of 3). This allowed us to map afferent (incoming) and efferent (outgoing) coupling visually.
-2. **Knowledge Dependencies (Behavioral Analysis):** To assess co-change frequencies (temporal coupling), we utilized **CodeScene**. By analyzing the Git commit history of the repository, we identified sets of files that are frequently modified together within the same commit. This approach allowed us to uncover implicit logical or architectural coupling between modules that might not be visible through traditional static analysis.
-3. **Automated cross-referencing:** To rigorously identify hidden dependencies, we developed custom Python scripts to extract a pure `#include` matrix directly from the source code and mathematically intersect it with the temporal coupling dataset. This pipeline systematically isolated instances where high temporal coupling exists without any underlying structural link.
+1. **Code Dependencies (Static Analysis):** We utilized [Doxygen](https://www.doxygen.nl/) in conjunction with [Graphviz](https://graphviz.org/) to parse the source code and extract structural dependencies. We configured Doxygen to recursively scan the directory and generate inclusion and inverse-inclusion graphs (with a maximum graph depth of 3). This allowed us to map afferent (incoming) and efferent (outgoing) coupling visually.
+2. **Knowledge Dependencies (Behavioral Analysis):** To assess co-change frequencies (temporal coupling), we utilized [CodeScene](https://codescene.com/product/behavioral-code-analysis). By analyzing the Git commit history of the repository, we identified sets of files that are frequently modified together within the same commit. This approach allowed us to uncover implicit logical or architectural coupling between modules that might not be visible through traditional static analysis.
+3. **Automated cross-referencing:** To rigorously identify hidden dependencies, we developed custom Python [scripts](./scripts/) to extract a pure `#include` matrix directly from the source code and mathematically intersect it with the temporal coupling dataset. This pipeline systematically isolated instances where high temporal coupling exists without any underlying structural link.
 
 ### 1.2 Code Dependencies Results 
 
@@ -50,7 +50,7 @@ These components have a high degree of responsibility but must maintain a low de
 | `CapsuleShape.cpp` & `CylinderShape.cpp` | 75% | 19 |
 
 #### Results and Inconsistencies
-While several frequent co-changes were consistent with our static code dependencies, our analysis revealed significant **inconsistencies**, cases where files change together structurally but lack a direct code link (`#include`).
+While several frequent co-changes were consistent with our static code dependencies, our [analysis](./scripts/knowledge_deps.csv) revealed significant inconsistencies, cases where files change together structurally but lack a direct code link (`#include`).
 
 * The most prominent example of this inconsistency is found in the serialization modules **`ObjectStreamBinaryIn.cpp`** and **`ObjectStreamBinaryOut.cpp`** shows a temporal coupling around 100%.
     * These two files exhibit a perfect knowledge dependency, meaning developers always update them simultaneously. However, cross-referencing this with Doxygen analysis confirms zero code dependencies between them. An input stream has no structural reason to include an output stream.
@@ -61,7 +61,7 @@ While they do not include each other structurally, they are logically coupled be
 
 ### 1.4 Quantitative Synthesis
 
-To provide a comprehensive quantitative view, we applied Python scripts to cross-reference the static analysis (1925 code dependencies) with the behavioral dataset. Out of the 171 highly coupled architectural pairs extracted from CodeScene, our script isolated 135 architectural inconsistencies:
+To provide a comprehensive quantitative view, we applied Python [scripts](./scripts/analyze_inconsistencies.py) to cross-reference the static analysis (1925 code dependencies) with the behavioral dataset. Out of the 171 highly coupled architectural pairs extracted from CodeScene, our script isolated [135](./scripts/inconsistencies_found.csv) architectural inconsistencies:
 
 1.  **High Code / High Knowledge:** Exactly 36 pairs (approx. 21%) of the highly co-changed modules fall here. These are tightly coupled subsystems where structural links (`#include`) properly document the need for simultaneous updates. *(Note: CodeScene inherently filters out trivial `.cpp`/`.h` couplings, keeping this number representative of true cross-module links).*
 2.  **High Code / Low Knowledge:** Modules like core math headers exhibit massive afferent coupling (included across the 1925 static links) but zero temporal coupling, proving the foundation layers are extremely stable and decoupled from behavioral volatility.
