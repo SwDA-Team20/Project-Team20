@@ -4,23 +4,26 @@
 
 To evaluate the dependencies among the software modules within the core Jolt Physics library, we employed this approach:
 
-1. **Code Dependencies (Static Analysis):** We utilized [Doxygen](https://www.doxygen.nl/) in conjunction with [Graphviz](https://graphviz.org/) to parse the source code and extract structural dependencies. We configured Doxygen to recursively scan the directory and generate inclusion and inverse-inclusion graphs (with a maximum graph depth of 3). This allowed us to map afferent (incoming) and efferent (outgoing) coupling visually.
-2. **Knowledge Dependencies (Behavioral Analysis):** To assess co-change frequencies (temporal coupling), we utilized [CodeScene](https://codescene.com/product/behavioral-code-analysis). By analyzing the Git commit history of the repository, we identified sets of files that are frequently modified together within the same commit. This approach allowed us to uncover implicit logical or architectural coupling between modules that might not be visible through traditional static analysis.
-3. **Automated cross-referencing:** To rigorously identify hidden dependencies, we developed custom Python [scripts](./scripts/) to extract a pure `#include` matrix directly from the source code and mathematically intersect it with the temporal coupling dataset. This pipeline systematically isolated instances where high temporal coupling exists without any underlying structural link.
+1. **Code Dependencies (Static Analysis):** We utilized [Doxygen](https://www.doxygen.nl/) in with [Graphviz](https://graphviz.org/) to parse the source code and extract structural dependencies. We configured Doxygen to recursively scan the directory and generate inclusion and inverse-inclusion graphs (with a maximum graph depth of 3). This allowed us to map incoming and outgoing coupling visually.
+2. **Knowledge Dependencies (Behavioral Analysis):** In order to quantify co-change frequencies (temporal coupling), we utilized [CodeScene](https://codescene.com/product/behavioral-code-analysis). By analyzing the Git commit history of the repository, we identified sets of files that are frequently modified together within the same commit. This approach allowed us to discover implicit logical or architectural coupling between modules that might not be visible through traditional static analysis.
+3. **Automated cross-referencing:** To identify hidden dependencies, we developed custom Python [scripts](./scripts/) to extract an `#include` matrix directly from the source code and mathematically intersect it with the temporal coupling dataset. This pipeline systematically isolated instances where high temporal coupling exists without any underlying structural link.
 
 ### 1.2 Code Dependencies Results 
 
 #### Files with the Most Dependencies
 The files exhibiting the highest number of outgoing dependencies are central implementation files that act as orchestrators or manage complex geometry and simulation logic:
 
-* **`MeshShape.cpp` (36 dependencies):** This file handles complex mesh-based collision detection. Its high dependency count is justified by the need to interact with BVH (Bounding Volume Hierarchies), triangle intersection algorithms, and various collision interfaces.
+* **`MeshShape.cpp` (36 dependencies):** This file handles complex mesh-based collision detection. Its high dependency count is justified by the need to interact with triangle intersection algorithms and various collision interfaces.
 ![MeshShape.cpp Dependency Graph](./images/mesh_shape_graph.svg)
+*Img1: MeshShape.cpp code dependencies (from Doxygen)*
 
-* **`PhysicsSystem.cpp` (31 dependencies):** This is the core orchestrator of the JoltPhysics engine. It coordinates bodies, constraints, shapes, and the simulation steps. Its high coupling is a natural consequence of its role as the central "hub" or Facade of the engine.
+* **`PhysicsSystem.cpp` (31 dependencies):** This is the core orchestrator of the JoltPhysics engine. It coordinates bodies, constraints, shapes, and the simulation steps. Its high coupling is a natural consequence of its role as the central "hub" of the engine.
 ![PhysicsSystem.cpp Dependency Graph](./images/physics_system_graph.svg)
+*Img2: PhysicsSystem.cpp code dependencies (from Doxygen)*
 
 * **`HeightFieldShape.cpp` (30 dependencies):** Similar to the mesh shape, this file manages terrain-like collision structures, requiring integration with multiple specialized math and collision utilities.
 ![HeightFieldShape.cpp Dependency Graph](./images/height_field_shape_graph.svg)
+*Img3: HeightFieldShape.cpp code dependencies (from Doxygen)*
 
 #### Files with the Least Dependencies
 By contrast, a large number of header files (`.h`) exhibit zero outgoing dependencies. They can be categorized into two main architectural groups:
@@ -30,15 +33,16 @@ By contrast, a large number of header files (`.h`) exhibit zero outgoing depende
 
 These files represent the lowest layer of the engine's architecture. They are designed with extreme cohesion and zero coupling to provide reusable building blocks. If a core utility like `Vector.h` were to include higher-level physics concepts, it would create circular dependencies, significantly damaging the modularity and maintainability of the engine.
 
-#### Highly Depended-Upon Components (Afferent Coupling)
+#### High Afferent Coupling
 While analyzing outgoing dependencies highlights the system's orchestrators, examining afferent coupling (incoming dependencies) reveals the fundamental pillars of the engine. Files such as `Body.h`, `Shape.h`, and the core abstract interfaces exhibit massive afferent coupling, as they are included by dozens of other modules across the codebase.
 These components have a high degree of responsibility but must maintain a low degree of instability. Because so many other classes depend on them, any structural change to these header files will trigger a massive recompilation cascade and potentially introduce widespread breaking changes. Consequently, the JoltPhysics developers maintain these core interfaces with extreme stability, heavily relying on polymorphism and abstract base classes to allow the rest of the engine to evolve without altering these foundational contracts.
 
 ### 1.3 Knowledge Dependencies
 
 ![Knowledge Dependencies Graph](./images/knowledge_dependencies.png)
+*Img4: Knoledge dependencies (from CodeScene)*
 
-| Coupled Entities | Degree of Coupling | Average Revisions |
+| Coupled Entities | Coupling | Commits |
 | :--- | :---: | :---: |
 | `ObjectStreamBinaryIn.cpp` & `ObjectStreamBinaryOut.cpp` | 100% | 6 |
 | `OffsetCenterOfMassShape.cpp` & `ScaledShape.cpp` | 88% | 13 |
@@ -50,14 +54,14 @@ These components have a high degree of responsibility but must maintain a low de
 | `CapsuleShape.cpp` & `CylinderShape.cpp` | 75% | 19 |
 
 #### Results and Inconsistencies
-While several frequent co-changes were consistent with our static code dependencies, our [analysis](./scripts/knowledge_deps.csv) revealed significant inconsistencies, cases where files change together structurally but lack a direct code link (`#include`).
+While several frequent co-changes were consistent with our static code dependencies, our [analysis](./scripts/knowledge_deps.csv) revealed significant inconsistencies, cases where files change together structurally without a direct code link (`#include`).
 
-* The most prominent example of this inconsistency is found in the serialization modules **`ObjectStreamBinaryIn.cpp`** and **`ObjectStreamBinaryOut.cpp`** shows a temporal coupling around 100%.
-    * These two files exhibit a perfect knowledge dependency, meaning developers always update them simultaneously. However, cross-referencing this with Doxygen analysis confirms zero code dependencies between them. An input stream has no structural reason to include an output stream.
-    * This inconsistency highlights a strict, implicit protocol dependency: the binary file format. If a developer modifies the engine to serialize a new physical property (e.g., writing a new float to the buffer in `Out`), they must logically mirror that exact change in the parsing sequence (`In`). The coupling is purely conceptual, driven by the need to maintain symmetric data handling rather than structural code execution.
+* The most prominent example of this inconsistency is found in the serialization modules **`ObjectStreamBinaryIn.cpp`** and **`ObjectStreamBinaryOut.cpp`**. They show a temporal coupling around 100%.
+    * These two files exhibit a perfect knowledge dependency, meaning developers always update them simultaneously. However, cross-referencing this with Doxygen analysis confirms zero code dependencies between them.
+    * This inconsistency highlights an implicit protocol dependency: the binary file format. If a developer modifies the engine to serialize a new physical property (e.g., writing a new float to the buffer in `Out`), they must logically mirror that exact change in the parsing sequence (`In`). The coupling is purely conceptual, driven by the need to maintain symmetric data handling rather than structural code execution.
 
 * Another notable pattern of inconsistency was found among the geometric shape decorators and modifiers. Files such as `RotatedTranslatedShape.cpp`, `OffsetCenterOfMassShape.cpp`, and `ScaledShape.cpp` frequently co-change (showing an 85%-88% coupling).
-While they do not include each other structurally, they are logically coupled because they all belong to the same family of the Decorator Design Pattern. They implement specific modifiers over the base Shape class. Whenever the underlying geometric API evolves all these concrete implementations must be updated in bulk to support the new feature. This is an example of  "Hidden Dependency" driven by the inheritance tree and polymorphic design: the compiler will not warn developers about missing updates until instantiation, making this knowledge dependency a potential source of technical debt if not properly documented for new contributors.
+While they do not include each other structurally, they are logically coupled because they implement specific modifiers over the base Shape class. Whenever the underlying geometric API evolves all these concrete implementations must be updated in bulk to support the new feature. This is an example of  "Hidden Dependency" driven by the inheritance tree and polymorphic design.
 
 ### 1.4 Quantitative Synthesis
 
@@ -65,7 +69,7 @@ To provide a comprehensive quantitative view, we applied Python [scripts](./scri
 
 1.  **High Code / High Knowledge:** Exactly 36 pairs (approx. 21%) of the highly co-changed modules fall here. These are tightly coupled subsystems where structural links (`#include`) properly document the need for simultaneous updates. *(Note: CodeScene inherently filters out trivial `.cpp`/`.h` couplings, keeping this number representative of true cross-module links).*
 2.  **High Code / Low Knowledge:** Modules like core math headers exhibit massive afferent coupling (included across the 1925 static links) but zero temporal coupling, proving the foundation layers are extremely stable and decoupled from behavioral volatility.
-3.  **Low Code / High Knowledge (The Inconsistencies):** The vast majority of our filtered dataset, 135 pairs (approx. 79%), represent hidden dependencies with no structural `#include` links. Beyond the serialization protocol mentioned above, our automated extraction highlighted textbook examples of cross-platform parallel evolution (e.g., `RendererDX12.cpp` co-changing with `RendererMTL.mm`) and sibling-class synchronized updates (e.g., `ConeConstraint.cpp` and `DistanceConstraint.cpp`).
+3.  **Low Code / High Knowledge (The Inconsistencies):** The vast majority of our filtered dataset, 135 pairs (approx. 79%), represent hidden dependencies with no structural `#include` links. Beyond the serialization protocol mentioned above, our automated extraction highlighted examples of cross-platform parallel evolution (e.g., `RendererDX12.cpp` co-changing with `RendererMTL.mm`) and sibling-class synchronized updates (e.g., `ConeConstraint.cpp` and `DistanceConstraint.cpp`).
 
 By analyzing this dataset, it is quantitatively clear that while the overall static architecture is clean, a massive portion of the engine's evolutionary dynamics relies on implicit knowledge, platform parity requirements, and polymorphic hierarchies that static analysis alone cannot map.
 
