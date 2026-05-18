@@ -25,3 +25,15 @@ I also used Doxygen to generate documentation, which made it easier to see the r
 ### What I understood
 - Understanding how classes work   
 - Getting a clearer picture of the internal design of the project 
+
+## 📓 Journal Entry – 18 May
+
+### Activity:
+
+I worked on the component-level architecture of the project and started creating the level 3 diagram using draw.io.
+I analyzed how the main components inside the system are organized 
+
+
+### What I worked on
+- Studied internal components of the system  
+- Created the initial component-level architecture diagram (C4 Level 3)  
