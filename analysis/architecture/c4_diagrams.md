@@ -37,10 +37,10 @@ Therefore, the relationship with Clean Architecture is only partial and conceptu
 
 ### Explanations:
  JoltPhysics is divided into two layers. The top layer holds reusable utility components (Core, Math, Geometry, AABBTree, TriangleSplitter, ObjectStream, Skeleton, Renderer, Shaders, Compute). The bottom layer is the PhysicsSystem subsystem containing the main simulation components (Body, Collision, Character, RagDoll, Shapes, Constraints, Vehicle, SoftBody, Hair).
- 
+
 ### SOLID Violations:
 
-*S — Single Responsibility Principle
+Single Responsibility Principle
 
 | # | Class | File | Issue |
 |---|---|---|---|
@@ -53,7 +53,7 @@ Therefore, the relationship with Clean Architecture is only partial and conceptu
 
 ---
 
-*O — Open/Closed Principle
+Open/Closed Principle
 
 | # | Class | File | Issue |
 |---|---|---|---|
@@ -63,7 +63,7 @@ Therefore, the relationship with Clean Architecture is only partial and conceptu
 
 ---
 
-*L — Liskov Substitution Principle
+Liskov Substitution Principle
 
 | # | Class | File | Issue |
 |---|---|---|---|
@@ -75,7 +75,7 @@ Therefore, the relationship with Clean Architecture is only partial and conceptu
 
 ---
 
-*I — Interface Segregation Principle
+Interface Segregation Principle
 
 | # | Class | File | Issue |
 |---|---|---|---|
@@ -87,7 +87,7 @@ Therefore, the relationship with Clean Architecture is only partial and conceptu
 
 ---
 
-*D — Dependency Inversion Principle
+Dependency Inversion Principle
 
 | # | Class | File | Issue |
 |---|---|---|---|
