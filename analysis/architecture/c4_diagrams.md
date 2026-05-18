@@ -33,8 +33,8 @@ A limited separation of concerns is still visible. Physics functionalities are m
 Therefore, the relationship with Clean Architecture is only partial and conceptual. The architecture is better described as a modular, performance-oriented library architecture rather than a Clean Architecture implementation.
 
 
-![ C4 - Level 2: Component Diagram ](./images/ComponentDiagram.png)
-
+![ C4 - Level 3: Component Diagram ](./images/ComponentDiagram.png)
+## ComponentDiagram
 *Component level: diagrams and explanations. \
 Did you observe any violation of SOLID principles at level 3 ?*
 
