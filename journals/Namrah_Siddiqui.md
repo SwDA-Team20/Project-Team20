@@ -31,9 +31,11 @@ I also used Doxygen to generate documentation, which made it easier to see the r
 ### Activity:
 
 I worked on the component-level architecture of the project and started creating the level 3 diagram using draw.io.
-I analyzed how the main components inside the system are organized 
+I analyzed how the main components inside the system are organized. I continued working on the component-level architecture analysis of the project. Wrote explanation and I also looked for possible violations of SOLID principles
 
 
 ### What I worked on
 - Studied internal components of the system  
 - Created the initial component-level architecture diagram (C4 Level 3)  
+- Added explanations for component interactions  
+- Reviewed the system for possible SOLID principle violations  

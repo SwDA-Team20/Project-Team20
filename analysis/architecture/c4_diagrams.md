@@ -32,11 +32,71 @@ A limited separation of concerns is still visible. Physics functionalities are m
 
 Therefore, the relationship with Clean Architecture is only partial and conceptual. The architecture is better described as a modular, performance-oriented library architecture rather than a Clean Architecture implementation.
 
-## ComponentDiagram
+## Component Diagram
 ![ C4 - Level 3: Component Diagram ](./images/ComponentDiagram.png)
 
-*Component level: diagrams and explanations. \
-Did you observe any violation of SOLID principles at level 3 ?*
+### Explanations:
+ JoltPhysics is divided into two layers. The top layer holds reusable utility components (Core, Math, Geometry, AABBTree, TriangleSplitter, ObjectStream, Skeleton, Renderer, Shaders, Compute). The bottom layer is the PhysicsSystem subsystem containing the main simulation components (Body, Collision, Character, RagDoll, Shapes, Constraints, Vehicle, SoftBody, Hair).
+ 
+### SOLID Violations:
+
+*S — Single Responsibility Principle
+
+| # | Class | File | Issue |
+|---|---|---|---|
+| 1 | `PhysicsSystem` | `PhysicsSystem.h` | 6 responsibilities: simulation, body access, collision, serialization, listeners, internal systems |
+| 2 | `DebugRenderer` | `DebugRenderer.h` | Primitive drawing + GPU batch creation + LOD management |
+| 3 | `Shape` | `Shape/Shape.h` | Collision + geometry + mass + debug + serialization + sub-shape |
+| 4 | `CharacterVirtual` | `CharacterVirtual.h` | Movement + contacts + penetration + ground detection + predictive contact |
+| 5 | `RagdollSettings` | `Ragdoll.h` | Config + skeleton mapping + serialization + stabilization |
+
+
+---
+
+*O — Open/Closed Principle
+
+| # | Class | File | Issue |
+|---|---|---|---|
+| 1 | `CollisionDispatch` | `CollisionDispatch.h` | For new shape type manual registration is required |
+| 2 | `EShapeSubType` | `Shape.h` | For new shape we have to enum modify so full recompile |
+| 3 | `PhysicsSystem` | `PhysicsSystem.h` | `BroadPhaseQuadTree` concrete member, not swappable |
+
+---
+
+*L — Liskov Substitution Principle
+
+| # | Class | File | Issue |
+|---|---|---|---|
+| 1 | `CharacterVirtual` | `CharacterVirtual.h` | `GetBodyID()` always returns invalid, no body exists |
+| 2 | `PlaneShape` | `PlaneShape.h` | Infinite bounds + zero mass, parent contract broken |
+| 3 | `EmptyShape` | `EmptyShape.h` | All collision methods no-op, caller gets nothing |
+| 4 | `StaticCompoundShape` | `StaticCompoundShape.h` | `AddShape()` throws assert, parent promises it works |
+
+
+---
+
+*I — Interface Segregation Principle
+
+| # | Class | File | Issue |
+|---|---|---|---|
+| 1 | `Shape` | `Shape.h` | 6 concern groups in one interface |
+| 2 | `BodyInterface` | `BodyInterface.h` | 7 concern groups: creation, transform, velocity, forces, activation, query, material |
+| 3 | `CharacterBase` | `CharacterBase.h` | `GetBodyID()` forced on `CharacterVirtual` which has no body |
+| 4 | `BroadPhase` | `BroadPhase.h` | Body management + queries + optimization + layer collision |
+
+
+---
+
+*D — Dependency Inversion Principle
+
+| # | Class | File | Issue |
+|---|---|---|---|
+| 1 | `RagdollSettings` | `Ragdoll.h` | Concrete `Skeleton*`,no `ISkeleton` interface |
+| 2 | `PhysicsSystem` | `PhysicsSystem.h` | `BroadPhaseQuadTree` hardcoded member, not injectable |
+| 3 | `Hair` | `Hair/` internals | Concrete `SoftBodySharedSettings`,  no abstraction |
+| 4 | `ObjectStreamIn` | `ObjectStream.cpp` | `Factory::sInstance` global singleton, not injectable |
+| 5 | `DebugRenderer` | `DebugRenderer.h` | `sInstance` global singleton, unit testing impossible |
+| 6 | `ContactConstraintManager` | `ContactConstraintManager.h` | Concrete `Body&`,  no `IBody` abstraction |
 
 ## Architectural level
 *Architectural characteristics: comment on important architectural characteristics/qualities of the system and how they are supported by the architecture. \
