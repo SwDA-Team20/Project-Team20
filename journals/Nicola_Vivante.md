@@ -16,5 +16,9 @@ I looked at the uses of the visitor pattern inside the system code: it is actual
 
 # 2026/05/11
 
-Notes for the visitor pattern analysis half-way done (missing diagram, word count checking still to be performed) 
+Notes for the visitor pattern analysis half-way done (missing diagram, word count checking still to be performed)
 
+
+# 2026/05/23
+
+Split analysis of different pattern in separate files. Singleton analysis completed.
