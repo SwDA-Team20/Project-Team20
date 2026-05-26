@@ -26,7 +26,7 @@ I also used Doxygen to generate documentation, which made it easier to see the r
 - Understanding how classes work   
 - Getting a clearer picture of the internal design of the project 
 
-## 📓 Journal Entry – 18 May
+## Journal Entry – 18 May
 
 ### Activity:
 
@@ -39,3 +39,8 @@ I analyzed how the main components inside the system are organized. I continued 
 - Created the initial component-level architecture diagram (C4 Level 3)  
 - Added explanations for component interactions  
 - Reviewed the system for possible SOLID principle violations  
+
+## Journal Entry – 26 May
+I worked on documenting Architectural characteristics.
+
+

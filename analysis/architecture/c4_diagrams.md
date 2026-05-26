@@ -98,5 +98,53 @@ Dependency Inversion Principle
 | 6 | `ContactConstraintManager` | `ContactConstraintManager.h` | Concrete `Body&`,  no `IBody` abstraction |
 
 ## Architectural level
-*Architectural characteristics: comment on important architectural characteristics/qualities of the system and how they are supported by the architecture. \
-You might also use components coupling and cohesion metrics to support your reasoning.*
+### 1. Performance Efficiency
+
+- **JobSystem (Core)** — Uses multiple CPU threads so work runs in parallel. 
+- **TempAllocator (Core)** — Uses a fast stack-based memory system instead of slow heap allocations. Memory is cleared each frame, avoiding performance costs.  
+- **Math system** — Uses SIMD (vector processing) so multiple calculations run at the same time.  
+- **SoftBody optimization** — Data is pre-sorted before simulation to improve cache performance.  
+- **GPU compute** — Heavy work can be moved to the GPU when available (DirectX 12, Metal, Vulkan).  
+
+---
+
+### 2. Functional Suitability
+
+- **Rigid bodies (:Body)** — Provides complete dynamics with MotionProperties, MassProperties, and activation management.  
+- **Collision detection** — Includes broad-phase (BroadPhase, BroadPhaseQuery) and narrow-phase (NarrowPhaseQuery, CollisionDispatch).  
+  Shapes module provides 12+ shape types covering all standard collision geometries.  
+- **Constraints (:Constraints)** — Covers all standard joint types: FixedConstraint, HingeConstraint, SliderConstraint, PointConstraint, ConeConstraint, SwingTwistConstraint, SixDOFConstraint, PathConstraint, GearConstraint, RackAndPinionConstraint, PulleyConstraint.  
+- **Specialised simulation** — Components like :Vehicle, :Character, :SoftBody, :Ragdoll, :Hair demonstrate completeness beyond basic rigid body dynamics.  
+
+---
+
+### 3. Compatibility
+
+- **Renderer / Compute** — Supports multiple graphics APIs: DirectX 12, Metal, Vulkan. The engine co-exists with all major graphics pipelines without modification.  
+- **ApplicationWindow** — Separate implementations for Linux, macOS, and Windows ensure cross-platform support.  
+- **SkeletonMapper** — Maps between different bone hierarchies, allowing interoperability with external animation systems using different skeleton conventions.  
+
+---
+
+### 4. Reliability
+
+- **IslandBuilder** — Isolates independent body groups. Instability in one simulation island does not affect others, ensuring fault isolation.  
+- **Floating-point control** — FPExceptionDisableDivByZero, FPExceptionDisableInvalid, FPExceptionDisableOverflow are explicitly handled to prevent NaN propagation and simulation corruption.  
+- **MutexArray (BodyManager)** — Provides fine-grained per-body locking, preventing race conditions in multi-threaded environments.  
+
+---
+
+### 5. Flexibility
+
+- **TempAllocator variants** — TempAllocatorImpl, TempAllocatorImplWithMallocFallback, TempAllocatorMalloc allow different memory strategies depending on platform or configuration.  
+- **VehicleController abstraction** — Enables new vehicle types without modifying core logic. Includes WheeledVehicleController, TrackedVehicleController, MotorcycleController.  
+- **EShapeSubType** — Reserves User1–User4 slots for custom shape extensions.  
+- **Compute backend** — GPU compute is optional. If unavailable, system falls back to CPU automatically, supporting both mobile and high-end systems.  
+
+---
+
+### 6. Maintainability
+
+- Layered architecture ensures Core, Math, and Geometry have zero dependencies on Physics components. Changes in Physics do not propagate downward.  
+- **:Math and :Core stability index = 0.0** — These are highly stable foundational modules.  
+- **ObjectStream reuse** — Shared across Shapes, Skeleton, Ragdoll, PhysicsScene, and Constraints, reducing duplication and improving maintainability.  
