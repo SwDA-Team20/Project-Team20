@@ -22,3 +22,8 @@ Notes for the visitor pattern analysis half-way done (missing diagram, word coun
 # 2026/05/23
 
 Split analysis of different pattern in separate files. Singleton analysis completed.
+
+
+# 2026/05/26
+
+Made a clarification about the visitor pattern instance that is analysed. Added Composite analysis 

@@ -6,6 +6,7 @@ to speed-up physics operations all objects ("bodies") in the scene are stored in
 Classes involved in c++ source code:
 
 JPH::QuadTree, JPH::QuadTree::NodeID, JPH:BodyID, JPH:QuadTree:Node
+Note: there are other occurrences of the visitor pattern being used along with CompoundShape subclasses, but they were not the ones analysed as the CompoundShape is already of interest in the use of the Composite pattern.
 
 
 There are no close resemblances to the design patter just by looking at the classes involved (see considerations below), but the closest it would look in a fully-OOP setting is: 
