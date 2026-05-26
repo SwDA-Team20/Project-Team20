@@ -13,3 +13,10 @@
 ### Insights
 - This analysis helped me better understand the scale and complexity of the system.
 - It also provided useful context for understanding how the project is structured.
+
+## May 11 – 17
+
+- I explored the Jolt Physics repository structure and reviewed project documentation such as `README.md`, `Docs/ProjectsUsingJolt.md`, and `Docs/Architecture.md`.
+- I analyzed the main stakeholders of the project, including AAA game studios, open-source engine teams, independent developers, contributors, and end users.
+- I explored the internal structure of the `Jolt/` directory and analyzed the responsibilities of the main modules.
+- I collected module statistics using PowerShell file count commands and documented my findings in supporting analysis files for the Overview section.
