@@ -16,4 +16,4 @@ The PhysicsSystem facade also serves the purpose of initializing many of the sub
 
 Possible alternatives and considerations about pros/cons:
 
-// TODO
+No other patterns are really suitable alternatives of the facade in the context of providing a single interface for multiple subsystem to access their functionality, when these are provided by defined systems that do not change at execution time.
