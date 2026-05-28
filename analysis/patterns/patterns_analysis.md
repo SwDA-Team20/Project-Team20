@@ -69,64 +69,14 @@ The physics engine is able to simulate bodies that resemble different objects by
 
 ### Classes involved in c++ source code:
 JPH::QuadTree, JPH::QuadTree::NodeID, JPH:BodyID, JPH:QuadTree:Node
-Note: there are other occurrences of the visitor pattern being used along with CompoundShape subclasses, but they were not the ones analysed as the CompoundShape is already of interest in the use of the Composite pattern.
+
+> Note:   
+> there are other occurrences of the visitor pattern being used along with CompoundShape subclasses, but they were not the ones analysed as the CompoundShape is already of interest in the use of the Composite pattern.
 
 
-There are no close resemblances to the design patter just by looking at the classes involved (see considerations below), but the closest it would look in a fully-OOP setting is: 
+There are no close resemblances to the design patter just by looking at the classes involved (see considerations below), but in a fully-OOP setting the classes roles would look like this: 
 
-// TODO: insert class diagram here
-
-The (pseudo-)code for this would look something like:
-
-// TODO: convert to image?
-// TODO: only keep element implementation?
-
-``` 
-interface QuadTreeElement { 
-	void accept(visitor: Visitor);
-}
-
-interface Visitor {
-	void visit(nodes: Nodes); // "visitNodes" in the code
-	void visit(body: Body); // "visitBody" in the code
-	bool shouldVisit(el: QuadTreeElement);
-	bool shouldAbort();
-	void OnStackResized() // not related to the pattern
-}
-
-
-class Body implements QuadTreeElement {
-	// data...
-
-	void accept(visitor: Visitor) {
-		if (visitor.shouldVisit(this)):
-			visitor.visit(this);
-	}
-}
-
-
-class Nodes implements QuadTreeElement {
-	// data (i.e. 4 QuadTreeElement children)...
-
-	void accept(visitor: Visitor) {
-		// visit element
-		if (visitor.shouldVisit(this)):
-			visitor.accept(this);
-
-		if (visitor.shouldAbort()):
-			return;
-
-		// visit children elements
-		foreach (child in children) {
-			child.accept(visitor);
-
-			if (visitor.shouldAbort()):
-				break;
-		}
-	}
-}
-```
-
+![](VisitorUML.svg)
 
 QuadTreeElement is the abstract "Element" with 2 concrete implementations:
 - Nodes (a group of 4 TreeElements)
