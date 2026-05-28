@@ -1,0 +1,19 @@
+Context:
+
+When using the engine to simulate physics and collisions between bodies, handle callbacks and perform queries against the scene, many different subsystems need to be called to interact with various aspect of the system, so a PhysicsSystem class is used as a Facade to redirect each external call to the appropriate subsystem operation. 
+
+
+Classes involved in c++ source code:
+
+JPH::PhysicsSystem (Facade), JPH::BodyManager, JPH::ContactConstraintManager, JPH::ConstraintManager, JPH::BroadPhase, JPH::NarrowPhaseQuery, JPH::BodyInterface, JPH::PhysicsStepListener... (Subsystems)
+
+
+Why is the pattern used:
+
+The pattern is used because having a single access point to different etherogeneus features can provide very useful in the context of game engines or other applications that need to interact with the physics engine code without having to know much about the underlying architecture, especially considering that this enables less coupling between the business rules and the physics engine implementation, given that the PhysicsSystem provides a stable enough boundary.
+The PhysicsSystem facade also serves the purpose of initializing many of the subsystem itself, like BroadPhase, ConstraintManager, BodyInterface and others. it also offers some methods to orchestrate more complex behaviours that involve various subsystems, such as the "Update" method: it is responsible for the physics simulation step and it involves the BroadPhase, BodyManager, Contacts Manager and others.
+
+
+Possible alternatives and considerations about pros/cons:
+
+// TODO

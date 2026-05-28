@@ -43,4 +43,5 @@ I analyzed how the main components inside the system are organized. I continued 
 ## Journal Entry – 26 May
 I worked on documenting Architectural characteristics.
 
-
+## Journal Entry – 28 May
+Reviewed and corrected the component-level architecture diagram using SourceTrail for better dependency tracing. Cross-checked the diagram against the actual implementation in the codebase to ensure accurate representation of components & relationships
