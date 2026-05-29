@@ -131,13 +131,13 @@ The physics engine is able to simulate bodies that resemble different objects by
 #### Classes involved in c++ source code:
 JPH::Shape, JPH::CompoundShape, JPH::StaticCompoundShape, JPH::MutableCompoundShape (the last 2 are subclasses of CompoundShape: they are not directly involved in the pattern but are the only 2 concrete classes in the list)
 
-// TODO: insert class diagram here
+![](../analysis/patterns/images/compositeUML.svg)
 
 #### Why is the pattern applied:
 Since a lot of operations that involve aggregate ("composite" in the pattern name, "compound" in the codebase) shapes can be reconduced to a combination of operations on the shapes in the aggregation, the Composite pattern provides a useful way of hiding this complexity from the caller of those operations. Such operations are then handled transparently by combining the information of sub shapes (with the use of the visitor pattern) and returning the appropriate result.
 
 #### Considerations about pros/cons, possible alternatives:
-Differently than the standard implementation presented in literature, the CompoundShape doesn't directly provide the method to remove a child (RemoveShape). This is due to the fact that one of its subclasses is the StaticCompoundShape, where the shape is "static" in the sense that it cannot be altered after its creation. The RemoveShape method is in fact provided and implemented in the other subclass, which is MutableCompoundShape.
+Differently than the standard implementation presented in literature, the CompoundShape doesn't directly provide the method to remove a child (RemoveShape). This is due to the fact that one of its subclasses is the StaticCompoundShape, where the shape is "static" in the sense that it cannot be altered after its creation. The RemoveShape method is in fact provided and implemented in the other subclass, which is MutableCompoundShape. Also the AddShape method is implemented in the composite classes only: this is one of two possible ways of implementing the pattern, the other being with the add/remove shape methods directly in the Shape class; this choice provides a less transparent Shape interface overall, but it makes sense since a lot of other Shape subclasses would just provide an empty implementation or throw an error, resulting in less safety during the use of such methods.
 
 ### 2.5 Visitor
 
@@ -153,7 +153,7 @@ JPH::QuadTree, JPH::QuadTree::NodeID, JPH:BodyID, JPH:QuadTree:Node
 
 There are no close resemblances to the design patter just by looking at the classes involved (see considerations below), but in a fully-OOP setting the classes roles would look like this: 
 
-![](../analysis/patterns/images/VisitorUML.svg)
+![](../analysis/patterns/images/visitorUML.svg)
 
 QuadTreeElement is the abstract "Element" with 2 concrete implementations:
 - Nodes (a group of 4 TreeElements)
