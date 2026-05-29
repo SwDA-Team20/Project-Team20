@@ -1,3 +1,5 @@
+NOTE: this document is not up to date, please refer to Design.md document
+
 Context:
 
 The physics engine is able to simulate bodies that resemble different objects by using a variety of "shapes", such as Sphere, Box, Capsule, Plane... More complex objects (like humanoid characters, vehicles, or even large scenaries made up of many different parts) however are hardly reprisented by only one of such shapes, so a special shape is defined to handle the conjunction of other child shapes. 
