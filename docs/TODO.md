@@ -18,6 +18,6 @@ To do:
 - mark code words with `` in patterns
 - insert missing images in patterns
 - find a way to reshape / resize images
-- fing a way to edit svg for dependencies
+- ~~find a way to edit svg for dependencies~~
 - add numbered image description in patterns
 - add links to jolt code
