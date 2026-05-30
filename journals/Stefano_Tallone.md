@@ -14,4 +14,8 @@ Instead of relying purely on the default tool exports, I wrote a couple of custo
 It worked: the scripts filtered out the trivial couplings and left 135 dependencies violations (like cross-platform rendering files that evolve together but obviously don't include each other). I revised my notes with both the qualitative examples and the quantitative data I extracted.
 
 ## May 11 - 17
-I reviewed my dependencies analysis. I did few changes here and there for clarity in the notes.
+I reviewed my dependencies analysis. I did few changes for clarity in the notes.
+
+## May 25 - 30
+I had a call with Nicola to coordinate how to merge my dependencies analysis with his architectural patterns section into the final report. I spent the rest of the week improving the visualization and structure of the document. To eliminate noise from the Doxygen analysis, I refactored the configuration by enforcing a strict maximum graph depth of 1, isolating direct architectural coupling. 
+I converted the unclear SVG graphs into clean, structured Mermaid diagrams, organizing files by their native submodules. To optimize the document's word count and enhance readability, I also transformed the Temporal Coupling data table into a Mermaid network graph. Finally, I refactored our organization's workspace by adding readme.
