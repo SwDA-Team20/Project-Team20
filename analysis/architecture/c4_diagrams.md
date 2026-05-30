@@ -33,9 +33,9 @@ Therefore, the relationship with Clean Architecture is only partial and conceptu
 
 ## Component Diagram
 ### Component Diagram (C4 Level 3):
-![ C4 - Level 3: Component Diagram ](./images/ComponentView.svg)
+![ C4 - Level 3: Component Diagram ](./images/ComponentDetailedView.svg)
 ### Detailed Component Interactions:
-![ C4 - Level 3: Component Detailed Diagram ](./images/ComponentDetailedView.svg)
+![ C4 - Level 3: Component Detailed Diagram ](./images/ComponentView.svg)
 ### UML Component Diagram:
 ![ UML Component Diagram ](./images/ComponentDiagramUML.png)
 
