@@ -6,7 +6,7 @@ KNOWLEDGE_DEPS_CSV = "knowledge_deps.csv"
 OUTPUT_CSV = "inconsistencies_found.csv"
 
 def analyze():
-    print("Loading code dependencies (Module analysis)...")
+    print("Loading code dependencies...")
     static_deps = set()
     
     try:
@@ -47,18 +47,17 @@ def analyze():
                 source_a, source_b = row[0].strip(), row[1].strip()
                 degree, revisions = row[2].strip(), row[3].strip()
 
-                # Extract module's name
+                #extract module's name
                 name_a = os.path.basename(source_a.replace('\\', '/'))
                 name_b = os.path.basename(source_b.replace('\\', '/'))
 
                 mod_a = os.path.splitext(name_a)[0].lower()
                 mod_b = os.path.splitext(name_b)[0].lower()
 
-                # Is there any code dependency between modules A and B?
                 has_ab = (mod_a, mod_b) in static_deps
                 has_ba = (mod_b, mod_a) in static_deps
 
-                # If there isn't code dependency, it's an inconsistency
+                # if there isn't code dependency, it's an inconsistency
                 if not has_ab and not has_ba:
                     # save result
                     inconsistencies.append([source_a, source_b, degree, revisions])
@@ -69,7 +68,6 @@ def analyze():
 
     print(f"Saving results...")
     with open(OUTPUT_CSV, 'w', newline='', encoding='utf-8') as f:
-        # Generate output csv
         writer = csv.writer(f, delimiter=',')
         writer.writerow(["File_A", "File_B", "Temporal_Coupling", "Shared_Revisions"])
         writer.writerows(inconsistencies)

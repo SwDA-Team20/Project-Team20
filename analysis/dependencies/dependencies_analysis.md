@@ -1,3 +1,5 @@
+> NOTE: this document is not up to date, please refer to Design.md document
+
 ## 1. Dependencies Analysis
 
 ### 1.1 Methodology

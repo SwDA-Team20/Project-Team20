@@ -26,7 +26,6 @@ def extract_static_dependencies():
                 except Exception as e:
                     print(f"Impossible read file {file}: {e}")
 
-    # save in csv
     with open(OUTPUT_CSV, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(["SourceFile", "TargetFile"])

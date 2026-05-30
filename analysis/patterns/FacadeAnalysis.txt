@@ -1,3 +1,5 @@
+NOTE: this document is not up to date, please refer to Design.md document
+
 Context:
 
 When using the engine to simulate physics and collisions between bodies, handle callbacks and perform queries against the scene, many different subsystems need to be called to interact with various aspect of the system, so a PhysicsSystem class is used as a Facade to redirect each external call to the appropriate subsystem operation. 
@@ -16,4 +18,4 @@ The PhysicsSystem facade also serves the purpose of initializing many of the sub
 
 Possible alternatives and considerations about pros/cons:
 
-// TODO
+No other patterns are really suitable alternatives of the facade in the context of providing a single interface for multiple subsystem to access their functionality, when these are provided by defined systems that do not change at execution time.

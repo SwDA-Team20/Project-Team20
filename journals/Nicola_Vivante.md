@@ -32,3 +32,8 @@ Made a clarification about the visitor pattern instance that is analysed. Added 
 # 2026/05/27
 
 Changed fourth pattern of the analysis from Factory to Facade, as the factory didn't bear that much resemblance to the actual pattern upon closer inspection, despite the name
+
+
+# 2026/05/28
+
+Finished facade analysis and merged all four patterns notes inside a single .md file (diagrams still to be added). Words count is around 1600 but there is margin to shorten some sections, if needed.

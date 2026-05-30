@@ -1,3 +1,5 @@
+NOTE: this document is not up to date, please refer to Design.md document
+
 Context:
 
 to speed-up physics operations all objects ("bodies") in the scene are stored in a special tree-like structure where each node is either a group of 4 children nodes ("Nodes") or the body (actually it is just an Id used to retrieve the actual body data). Multiple different queries such as raycasts, shapeCasts and collision checking must be defined and need to traverse the tree structure. 

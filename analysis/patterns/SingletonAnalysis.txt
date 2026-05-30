@@ -1,3 +1,5 @@
+NOTE: this document is not up to date, please refer to Design.md document
+
 Context:
 
 There are many examples of the Singleton pattern in the system, such as the Factory class, the Profiler class, the DeterminismLog class and DebugRenderer class, all needing to be accessed from a single point across different parts of the codebase.

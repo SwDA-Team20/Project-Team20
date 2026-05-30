@@ -1,4 +1,4 @@
-# Design
+Assignment:
 
 - *Evaluate code dependencies among the software modules in the project:*
     - *Code dependencies: based on imports in source code*
@@ -12,11 +12,13 @@
         - *Is there an alternative, what would be pros & cons?*
 - *Max 2500 words, excluding diagrams*
 
-## Dependencies
-*Method / tools used to analyze dependencies and results of the analysis*
-
-## Patterns
-*List of detected patterns and their analysis with links to code*
-
-## Summary
-*Summary of the findings of the two design aspects*
+To do:
+- remove ~100 words from dependencies and 100 words from analysis
+- make summary
+- mark code words with `` in patterns
+- insert missing images in patterns
+- find a way to reshape / resize images
+- ~~find a way to edit svg for dependencies~~
+- add numbered image description in patterns
+- add links to jolt code
+- add bold highlights
