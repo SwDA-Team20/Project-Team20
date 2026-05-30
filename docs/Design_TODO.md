@@ -21,3 +21,4 @@ To do:
 - fing a way to edit svg for dependencies
 - add numbered image description in patterns
 - add links to jolt code
+- add bold highlights
