@@ -46,13 +46,13 @@ Therefore, the relationship with Clean Architecture is only partial and conceptu
 
 Single Responsibility Principle
 
-| # | Class | File | Issue |
+| # | Class | File | Issue | 
 |---|---|---|---|
-| 1 | `PhysicsSystem` | `PhysicsSystem.h` | 6 responsibilities: simulation, body access, collision, serialization, listeners, internal systems |
-| 2 | `DebugRenderer` | `DebugRenderer.h` | Primitive drawing + GPU batch creation + LOD management |
-| 3 | `Shape` | `Shape/Shape.h` | Collision + geometry + mass + debug + serialization + sub-shape |
-| 4 | `CharacterVirtual` | `CharacterVirtual.h` | Movement + contacts + penetration + ground detection + predictive contact |
-| 5 | `RagdollSettings` | `Ragdoll.h` | Config + skeleton mapping + serialization + stabilization |
+| 1 | `PhysicsSystem` | `PhysicsSystem.h` | 6 responsibilities: simulation, body access, collision, serialization, listeners, internal systems. This one class controls the entire physics world  it runs the simulation, manages bodies, handles collision, saves/loads state, listens for events, and manages internal subsystems. If you want to change how saving works, you risk breaking the simulation.  |
+| 2 | `DebugRenderer` | `DebugRenderer.h` | Primitive drawing + GPU batch creation + LOD management.This class draws debug shapes on screen, but it also decides how to batch draw calls for the GPU and manages level-of-detail (how detailed shapes look at different distances). Drawing is one job. Batching is another. LOD is a third. |
+| 3 | `Shape` | `Shape/Shape.h` | Collision + geometry + mass + debug + serialization + sub-shape. A shape class should describe a shape. But this class also detects collisions, calculates mass, draws debug visualizations, saves itself to disk, and manages child shapes. Any change to how shapes are saved affects the same class as how shapes detect collisions which makes both harder to change safely. |
+| 4 | `CharacterVirtual` | `CharacterVirtual.h` | Movement + contacts + penetration + ground detection + predictive contact. This class moves a character, but it also records every contact point the character touches, resolves penetration (when the character clips into a wall), detects what ground the character is standing on, and predicts future contacts before they happen. Five different jobs in one class. |
+| 5 | `RagdollSettings` | `Ragdoll.h` | Config + skeleton mapping + serialization + stabilization.  A settings class should just hold configuration values. But this class also maps the ragdoll onto a skeleton (a separate concern), saves and loads itself (serialization), and contains logic to stabilize the ragdoll simulation. Four reasons to change it.|
 
 
 
@@ -61,9 +61,9 @@ Open/Closed Principle
 
 | # | Class | File | Issue |
 |---|---|---|---|
-| 1 | `CollisionDispatch` | `CollisionDispatch.h` | For new shape type manual registration is required |
-| 2 | `EShapeSubType` | `Shape.h` | For new shape we have to enum modify so full recompile |
-| 3 | `PhysicsSystem` | `PhysicsSystem.h` | `BroadPhaseQuadTree` concrete member, not swappable |
+| 1 | `CollisionDispatch` | `CollisionDispatch.h` | For new shape type manual registration is required. When you create a new shape (say a cone), you must manually go into CollisionDispatch and register how the cone collides with every other shape. This is editing existing code to add new behaviour. |
+| 2 | `EShapeSubType` | `Shape.h` | For new shape we have to enum modify so full recompile. EShapeSubType is a list (enum) of all shape types. Adding a new shape means adding a new entry to this list, which forces every file that uses the list to recompile. In a large codebase, this can mean recompiling thousands of files just to add one shape. |
+| 3 | `PhysicsSystem` | `PhysicsSystem.h` | `BroadPhaseQuadTree` concrete member, not swappable. The broadphase is the system that quickly filters which objects might be colliding. PhysicsSystem hardcodes it as BroadPhaseQuadTree. If you want to try a different broadphase algorithm (say a grid or a BVH tree), you must modify PhysicsSystem itself.|
 
 
 
@@ -71,10 +71,10 @@ Liskov Substitution Principle
 
 | # | Class | File | Issue |
 |---|---|---|---|
-| 1 | `CharacterVirtual` | `CharacterVirtual.h` | `GetBodyID()` always returns invalid, no body exists |
-| 2 | `PlaneShape` | `PlaneShape.h` | Infinite bounds + zero mass, parent contract broken |
-| 3 | `EmptyShape` | `EmptyShape.h` | All collision methods no-op, caller gets nothing |
-| 4 | `StaticCompoundShape` | `StaticCompoundShape.h` | `AddShape()` throws assert, parent promises it works |
+| 1 | `CharacterVirtual` | `CharacterVirtual.h` | `GetBodyID()` always returns invalid, no body exists. CharacterVirtual inherits from CharacterBase. CharacterBase has a method GetBodyID() that promises to return the physics body attached to the character. But CharacterVirtual has no physics body it moves kinematically so GetBodyID() always returns an invalid ID. Any code that calls GetBodyID() on a CharacterBase pointer and then uses the result will silently fail if it receives a CharacterVirtual |
+| 2 | `PlaneShape` | `PlaneShape.h` | Infinite bounds + zero mass, parent contract broken.Shape promises that every shape has finite bounds (a bounding box) and a meaningful mass. PlaneShape represents an infinite flat plane — its bounds are infinite and its mass is zero. Code that calculates physics based on a shape's mass or bounding box will break silently when given a PlaneShape |
+| 3 | `EmptyShape` | `EmptyShape.h` | All collision methods no-op, caller gets nothing. EmptyShape inherits from Shape and is supposed to be a shape that participates in collision. But every collision method does absolutely nothing. A caller that asks "did this shape collide with anything?" will always get no results.|
+
 
 
 
@@ -83,10 +83,10 @@ Interface Segregation Principle
 
 | # | Class | File | Issue |
 |---|---|---|---|
-| 1 | `Shape` | `Shape.h` | 6 concern groups in one interface |
-| 2 | `BodyInterface` | `BodyInterface.h` | 7 concern groups: creation, transform, velocity, forces, activation, query, material |
-| 3 | `CharacterBase` | `CharacterBase.h` | `GetBodyID()` forced on `CharacterVirtual` which has no body |
-| 4 | `BroadPhase` | `BroadPhase.h` | Body management + queries + optimization + layer collision |
+| 1 | `Shape` | `Shape.h` | 6 concern groups in one interface. The Shape interface forces any class that implements it to provide methods for collision detection, geometry queries, mass calculation, debug rendering, serialization, and sub-shape access all six groups at once. A class that only needs to render a shape for debug purposes is still forced to implement collision detection methods it will never use. |
+| 2 | `BodyInterface` | `BodyInterface.h` | 7 concern groups: creation, transform, velocity, forces, activation, query, material. BodyInterface is the main way to interact with physics bodies. It bundles together: creating bodies, moving them, setting velocity, applying forces, activating/deactivating, querying their position, and getting their material. A system that only needs to query positions must still depend on the full interface including force application methods it will never call. |
+| 3 | `CharacterBase` | `CharacterBase.h` | `GetBodyID()` forced on `CharacterVirtual` which has no body. CharacterBase is the shared interface for all character types. It includes GetBodyID() — but CharacterVirtual has no body. By putting this method in the base interface, all character implementations are forced to provide it even when it makes no sense for them. CharacterVirtual has to implement a method that returns an invalid ID just to satisfy the interface. |
+| 4 | `BroadPhase` | `BroadPhase.h` | Body management + queries + optimization + layer collision. BroadPhase combines four separate concerns in one interface: adding/removing bodies, running spatial queries, optimising the internal tree structure, and configuring layer collision rules. A system that only wants to run spatial queries must depend on the full interface including body management and optimisation methods it will never call. |
 
 
 
@@ -95,12 +95,10 @@ Dependency Inversion Principle
 
 | # | Class | File | Issue |
 |---|---|---|---|
-| 1 | `RagdollSettings` | `Ragdoll.h` | Concrete `Skeleton*`,no `ISkeleton` interface |
-| 2 | `PhysicsSystem` | `PhysicsSystem.h` | `BroadPhaseQuadTree` hardcoded member, not injectable |
-| 3 | `Hair` | `Hair/` internals | Concrete `SoftBodySharedSettings`,  no abstraction |
-| 4 | `ObjectStreamIn` | `ObjectStream.cpp` | `Factory::sInstance` global singleton, not injectable |
-| 5 | `DebugRenderer` | `DebugRenderer.h` | `sInstance` global singleton, unit testing impossible |
-| 6 | `ContactConstraintManager` | `ContactConstraintManager.h` | Concrete `Body&`,  no `IBody` abstraction |
+| 1 | `RagdollSettings` | `Ragdoll.h` | Concrete `Skeleton*`,no `ISkeleton` interface. RagdollSettings stores a direct pointer to a Skeleton object. There is no ISkeleton interface. This means RagdollSettings is hard-wired to one specific implementation of a skeleton. If you wanted to use a different skeleton representation (say from a different animation system), you would have to change RagdollSettings itself. |
+| 2 | `PhysicsSystem` | `PhysicsSystem.h` | `BroadPhaseQuadTree` hardcoded member, not injectable. PhysicsSystem creates and owns a BroadPhaseQuadTree directly. There is no way to pass in a different broadphase from outside (called "dependency injection"). This makes it impossible to test PhysicsSystem with a fake or mock broadphase, and impossible to swap the algorithm without modifying the class. |
+| 3 | `Hair` | `Hair/` internals | Concrete `SoftBodySharedSettings`,  no abstraction. The Hair simulation internally depends directly on SoftBodySharedSettings — the concrete settings class for soft bodies. There is no abstract ISoftBodySettings interface. If the soft body settings structure ever changes, Hair must change too, even if Hair's own behaviour has not changed.|
+| 4 | `ContactConstraintManager` | `ContactConstraintManager.h` | Concrete `Body&`,  no `IBody` abstraction. ContactConstraintManager takes direct references to Body objects the concrete physics body class. There is no IBody interface. This means the constraint manager is tightly coupled to the full Body implementation. You cannot test the constraint manager with a lightweight mock body; you must set up a real Body with all its dependencies.|
 
 ## Architectural level
 ### 1. Performance Efficiency
