@@ -32,7 +32,12 @@ A limited separation of concerns is still visible inside the core library. Physi
 Therefore, the relationship with Clean Architecture is only partial and conceptual. The architecture is better described as a modular, performance-oriented library architecture with supporting executables rather than a Clean Architecture implementation. 
 
 ## Component Diagram
-![ C4 - Level 3: Component Diagram ](./images/ComponentDiagram.png)
+### Component Diagram (C4 Level 3):
+![ C4 - Level 3: Component Diagram ](./images/ComponentView.svg)
+### Detailed Component Interactions:
+![ C4 - Level 3: Component Detailed Diagram ](./images/ComponentDetailedView.svg)
+### UML Component Diagram:
+![ UML Component Diagram ](./images/ComponentDiagramUML.png)
 
 ### Explanations:
  JoltPhysics is divided into two layers. The top layer holds reusable utility components (Core, Math, Geometry, AABBTree, TriangleSplitter, ObjectStream, Skeleton, Renderer, Shaders, Compute). The bottom layer is the PhysicsSystem subsystem containing the main simulation components (Body, Collision, Character, RagDoll, Shapes, Constraints, Vehicle, SoftBody, Hair).
@@ -50,7 +55,7 @@ Single Responsibility Principle
 | 5 | `RagdollSettings` | `Ragdoll.h` | Config + skeleton mapping + serialization + stabilization |
 
 
----
+
 
 Open/Closed Principle
 
@@ -60,7 +65,7 @@ Open/Closed Principle
 | 2 | `EShapeSubType` | `Shape.h` | For new shape we have to enum modify so full recompile |
 | 3 | `PhysicsSystem` | `PhysicsSystem.h` | `BroadPhaseQuadTree` concrete member, not swappable |
 
----
+
 
 Liskov Substitution Principle
 
@@ -72,7 +77,7 @@ Liskov Substitution Principle
 | 4 | `StaticCompoundShape` | `StaticCompoundShape.h` | `AddShape()` throws assert, parent promises it works |
 
 
----
+
 
 Interface Segregation Principle
 
@@ -84,7 +89,7 @@ Interface Segregation Principle
 | 4 | `BroadPhase` | `BroadPhase.h` | Body management + queries + optimization + layer collision |
 
 
----
+
 
 Dependency Inversion Principle
 
@@ -106,7 +111,7 @@ Dependency Inversion Principle
 - **SoftBody optimization** — Data is pre-sorted before simulation to improve cache performance.  
 - **GPU compute** — Heavy work can be moved to the GPU when available (DirectX 12, Metal, Vulkan).  
 
----
+
 
 ### 2. Functional Suitability
 
@@ -116,7 +121,7 @@ Dependency Inversion Principle
 - **Constraints (:Constraints)** — Covers all standard joint types: FixedConstraint, HingeConstraint, SliderConstraint, PointConstraint, ConeConstraint, SwingTwistConstraint, SixDOFConstraint, PathConstraint, GearConstraint, RackAndPinionConstraint, PulleyConstraint.  
 - **Specialised simulation** — Components like :Vehicle, :Character, :SoftBody, :Ragdoll, :Hair demonstrate completeness beyond basic rigid body dynamics.  
 
----
+
 
 ### 3. Compatibility
 
@@ -124,7 +129,7 @@ Dependency Inversion Principle
 - **ApplicationWindow** — Separate implementations for Linux, macOS, and Windows ensure cross-platform support.  
 - **SkeletonMapper** — Maps between different bone hierarchies, allowing interoperability with external animation systems using different skeleton conventions.  
 
----
+
 
 ### 4. Reliability
 
@@ -132,7 +137,7 @@ Dependency Inversion Principle
 - **Floating-point control** — FPExceptionDisableDivByZero, FPExceptionDisableInvalid, FPExceptionDisableOverflow are explicitly handled to prevent NaN propagation and simulation corruption.  
 - **MutexArray (BodyManager)** — Provides fine-grained per-body locking, preventing race conditions in multi-threaded environments.  
 
----
+
 
 ### 5. Flexibility
 
@@ -141,7 +146,7 @@ Dependency Inversion Principle
 - **EShapeSubType** — Reserves User1–User4 slots for custom shape extensions.  
 - **Compute backend** — GPU compute is optional. If unavailable, system falls back to CPU automatically, supporting both mobile and high-end systems.  
 
----
+
 
 ### 6. Maintainability
 

@@ -44,4 +44,7 @@ I analyzed how the main components inside the system are organized. I continued 
 I worked on documenting Architectural characteristics.
 
 ## Journal Entry – 28 May
-Reviewed and corrected the component-level architecture diagram using SourceTrail for better dependency tracing. Cross-checked the diagram against the actual implementation in the codebase to ensure accurate representation of components & relationships
+Reviewed and corrected the component-level architecture diagram using SourceTrail for better dependency tracing. Cross-checked the diagram against the actual implementation in the codebase to ensure accurate representation of components & relationships.
+
+## Journal Entry – 30 May
+Based on the feedback received on the previous submission, I revisited the component diagram because it did not fully meet the required specifications. I researched the C4 Model and used Structurizr to create a proper Level 3 (Component) diagram. The updated diagram provides a clearer representation of the system's components, responsibilities, and interactions, ensuring better alignment with the assignment requirements and C4 modeling standards.
