@@ -87,32 +87,32 @@ There are many examples of functionalities that rely on a single instance to wor
 // TODO: insert class diagram here (?)
 
 #### Why is the pattern applied:
-All the classes involved are accessed at multiple different points of the system, without any particular cohesion among those callers; this makes sense since functionalities such as debug drawing, profiling, logging and a way to instantiate objects with a given type id (the case of `Factory`) are very likely to be widespread in the codebase. This creates the need to ensure that a single point of access to these functionalities is provided, and the Singleton pattern is a simple and effective enough solution.
+All the classes involved are accessed at multiple different points of the system, without any particular cohesion among those callers; this makes sense since functionalities such as debug drawing, profiling, logging and a way to instantiate objects with a given type id (the case of `Factory`) are very likely to be widespread in the codebase. This creates the need to ensure that a single point of access to these functionalities is provided, and the **Singleton** pattern is a simple and effective enough solution.
 
 
 #### Considerations about pros/cons:
-One issue in the use of the Singleton pattern is that it is implemented in a way that obstructs potential evolvability: let's consider for example the `DebugRenderer` class (but this can apply to all Singleton occurrences in the system), where it needs to be refactored to support more instances that run on multiple threads to improve overall performance.
-The problem lies in the static instance being accessed explicitly with the use of a public static variable `sInstance`, instead of a `getInstance()` method, so all `DebugRenderer::sInstance` calls need to be refactored (100+ occurrences across more than 20 files). It would be useful to add a layer of indirection to access the instance, so that in a potential refactoring the `getInstance()` method could internally switch from returning one instance to selecting the best among many available, essencially transitioning from a Singleton to a Broker without the need of drastic changes in the codebase. It has to be said, however, that the pattern is currently used to access relatively stable features that are likely to remain single instances throughout the system lifetime. 
+One issue in the use of the **Singleton** pattern is that it is implemented in a way that obstructs potential evolvability: let's consider for example the `DebugRenderer` class (but this can apply to all **Singleton** occurrences in the system), where it needs to be refactored to support more instances that run on multiple threads to improve overall performance.
+The problem lies in the static instance being accessed explicitly with the use of a public static variable `sInstance`, instead of a `getInstance()` method, so all `DebugRenderer::sInstance` calls need to be refactored (100+ occurrences across more than 20 files). It would be useful to add a layer of indirection to access the instance, so that in a potential refactoring the `getInstance()` method could internally switch from returning one instance to selecting the best among many available, essencially transitioning from a **Singleton** to a **Broker** without the need of drastic changes in the codebase. It has to be said, however, that the pattern is currently used to access relatively stable features that are likely to remain single instances throughout the system lifetime. 
 
 ### 2.3 Facade
 
 #### Context:
-When using the engine to simulate physics and collisions between bodies, handle callbacks and perform queries against the scene, many different subsystems need to be called to interact with various aspect of the system, so a `PhysicsSystem` class is used as a Facade to redirect each external call to the appropriate subsystem operation. 
+When using the engine to simulate physics and collisions between bodies, handle callbacks and perform queries against the scene, many different subsystems need to be called to interact with various aspect of the system, so a `PhysicsSystem` class is used as a **Facade** to redirect each external call to the appropriate subsystem operation. 
 
 
 #### Classes involved in c++ source code:
-`JPH::PhysicsSystem` (Facade), `JPH::BodyManager`, `JPH::ContactConstraintManager`, `JPH::ConstraintManager`, `JPH::BroadPhase`, `JPH::NarrowPhaseQuery`, `JPH::BodyInterface`, `JPH::PhysicsStepListener`... (Subsystems)
+`JPH::PhysicsSystem` (facade), `JPH::BodyManager`, `JPH::ContactConstraintManager`, `JPH::ConstraintManager`, `JPH::BroadPhase`, `JPH::NarrowPhaseQuery`, `JPH::BodyInterface`, `JPH::PhysicsStepListener`... (subsystems)
 
 // TODO: insert class diagram here
 
 
 #### Why is the pattern applied:
 The pattern is used because having a single access point to different etherogeneus features can provide very useful in a library, where the main application interacts with the physics engine code without having to deal with the underlying architecture, with less coupling between the app business-rules and the physics engine implementation (given that the `PhysicsSystem` provides a stable enough boundary).
-The facade also serves the purpose of initializing many of the subsystems, like `BroadPhase`, `ConstraintManager`, `BodyInterface` and others. It also orchestrates more complex behaviours that involve various subsystems toghether, such as the `Update` method: it is responsible for the physics simulation step and it involves the `BroadPhase`, `BodyManager`, `ContactsManager` and others.
+The **Facade** also serves the purpose of initializing many of the subsystems, like `BroadPhase`, `ConstraintManager`, `BodyInterface` and others. It also orchestrates more complex behaviours that involve various subsystems toghether, such as the `Update` method: it is responsible for the physics simulation step and it involves the `BroadPhase`, `BodyManager`, `ContactsManager` and others.
 
 
 #### Considerations about pros/cons:
-The facade is simply a very good choice for providing a single interface for multiple subsystem to access their functionality (when these subsystems do not change at execution time).
+The **Facade** is simply a very good choice for providing a single interface for multiple subsystem to access their functionality (when these subsystems do not change at execution time).
 
 
 ### 2.4 Composite
@@ -126,7 +126,7 @@ The physics engine is able to simulate bodies that resemble different objects by
 ![](../analysis/patterns/images/compositeUML.svg)
 
 #### Why is the pattern applied:
-Since all operations that involve composite ("compound" in the codebase) shapes can be reconduced to a combination of operations on the children shapes, the Composite pattern provides a useful way of hiding this complexity from the outside. In this way operations are handled transparently and the whole hierarchy of shapes can be handled mostly uniformly (see below). 
+Since all operations that involve composite ("compound" in the codebase) shapes can be reconduced to a combination of operations on the children shapes, the **Composite** pattern provides a useful way of hiding this complexity from the outside. In this way operations are handled transparently and the whole hierarchy of shapes can be handled mostly uniformly (see below). 
 
 #### Considerations about pros/cons:
 The `AddShape` method is present only in the composite classes and not as a base `Shape` method: this is one of two possible ways of implementing the pattern and this choice provides a less transparent `Shape` interface when dealing with the hierarchy creation, but it also makes sense since a lot of other `Shape` subclasses would just provide an empty implementation or throw an error, resulting in less safety during the use of such methods.
@@ -141,7 +141,7 @@ To speed-up physics operations, all objects ("bodies") in the scene are stored i
 `JPH::QuadTree`, `JPH::QuadTree::NodeID`, `JPH:BodyID`, `JPH:QuadTree:Node`
 
 > Note:   
-> there are other occurrences of the visitor pattern being used along with `CompoundShape` subclasses, but they were not the ones analysed as the `CompoundShape` is already of interest in the use of the Composite pattern.
+> there are other occurrences of the **Visitor** pattern being used along with `CompoundShape` subclasses, but they were not the ones analysed as the `CompoundShape` is already of interest in the use of the **Composite** pattern.
 
 
 There are no close resemblances to the design patter just by looking at the classes involved (see considerations below), but in a fully-OOP setting the class diagram would look like this: 
@@ -152,7 +152,7 @@ There are no close resemblances to the design patter just by looking at the clas
 - `Nodes` (a group of 4 `QuadTreeElements`)
 - `Body` (a leaf of the `QuadTree`)
 
-Visitor is the abstract "Visitor" with many concrete implementations:
+`Visitor` is the abstract "Visitor" with many concrete implementations:
 - `CastRayVisitor`
 - `CastAABoxVisitor`
 - `CollideAABoxVisitor`
@@ -161,10 +161,10 @@ Visitor is the abstract "Visitor" with many concrete implementations:
 - `CollideOrientedBoxVisitor`
 
 #### Why is the pattern applied:
-The Element interface has just 2 concrete implementations, and there are already multiple operations that need to be performed on the structure: this means that it is better to have the operations (visitors) implement a different behaviour depending on the few concrete element types rather than each element implementing a different behaviour for each operation. At the same time the way the structure is navigated depends on the element type, so mixing the traversal function with the operations code would lead to the rapid degradation of maintainability. By using the visitor pattern each independent query is segregated inside its own visitor, while the tree traversal code stays untouched.
+The Element interface has just 2 concrete implementations, and there are already multiple operations that need to be performed on the structure: this means that it is better to have the operations (visitors) implement a different behaviour depending on the few concrete element types rather than each element implementing a different behaviour for each operation. At the same time the way the structure is navigated depends on the element type, so mixing the traversal function with the operations code would lead to the rapid degradation of maintainability. By using the **Visitor** pattern each independent query is segregated inside its own visitor, while the tree traversal code stays untouched.
 
 #### Considerations about pros/cons:
-The Element class hierarchy is not actually defined because there are only 2 Element types that will ever need to exist and the tree traversal doesn't happen recursively but with a stack-like data structure. Also the Visitor interface is missing and that is because all the queries are c++ template functions where a custom visitor is defined and implemented inside in combination with inlining. This means that no visitor will exist at all after compiling, which makes sense since physics queries are likely to be called hundreds or thousands of times per seconds, but comes at the cost of worse understandability of the code. 
+The Element class hierarchy is not actually defined because there are only 2 Element types that will ever need to exist and the tree traversal doesn't happen recursively but with a stack-like data structure. Also the **Visitor** interface is missing and that is because all the queries are c++ template functions where a custom visitor is defined and implemented inside in combination with inlining. This means that no visitor will exist at all after compiling, which makes sense since physics queries are likely to be called hundreds or thousands of times per seconds, but comes at the cost of worse understandability of the code. 
 
 
 ## 3. Summary

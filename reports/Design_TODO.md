@@ -13,12 +13,12 @@ Assignment:
 - *Max 2500 words, excluding diagrams*
 
 To do:
-- remove ~100 words from dependencies and 100 words from analysis
+- ~~remove ~100 words from dependencies and 100 words from analysis~~
 - make summary
-- mark code words with `` in patterns
+- ~~mark code words with `` in patterns~~
 - insert missing images in patterns
 - find a way to reshape / resize images
 - ~~find a way to edit svg for dependencies~~
 - add numbered image description in patterns
 - add links to jolt code
-- add bold highlights
+- ~~add bold highlights to pattern names~~
