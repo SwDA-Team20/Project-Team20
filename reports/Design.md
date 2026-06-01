@@ -119,7 +119,7 @@ The **Facade** is simply a very good choice for providing a single interface for
 The physics engine is able to simulate bodies that resemble different objects by using a variety of "shapes", such as Sphere, Box, Capsule, Plane... More complex objects (like humanoid characters, vehicles, or even large game-level scenaries) however are hardly reprisented by only one of such shapes, so a new one is defined to handle the conjunction of other child shapes. 
 
 #### Classes involved in c++ source code:
-[`JPH::Shape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/Shape.h#L184), [`JPH::CompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/CompoundShape.h#L52), [`JPH::StaticCompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/StaticCompoundShape.h#L32), [`JPH::MutableCompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/MutableCompoundShape.h#L32) (the last 2 are subclasses of CompoundShape: they are not directly involved in the pattern but are the only 2 concrete classes in the list)
+[`JPH::Shape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/Shape.h#L184), [`JPH::CompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/CompoundShape.h#L52), [`JPH::StaticCompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/StaticCompoundShape.h#L32), [`JPH::MutableCompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/MutableCompoundShape.h#L32)
 
 ![](../analysis/patterns/images/compositeUML.svg)  
 *Img7: Composite pattern in Jolt.*
@@ -134,7 +134,7 @@ Also differently than the standard implementation presented in literature, the `
 ### 2.5 Visitor
 
 #### Context:
-To speed-up physics operations, all objects ("bodies") in the scene are stored in a special tree-like structure where each node is either a group of 4 children nodes ("Nodes") or the body (actually the tree stores Ids used to retrieve the actual body data). Multiple different queries such as raycasts, shapeCasts and collision checks need to traverse the tree structure to operate. 
+To speed-up physics operations, all objects ("bodies") in the scene are stored in a special tree-like structure where each node is either a group of 4 children nodes ("Nodes") or the body (actually the tree stores Ids used to retrieve the bodies' data). Multiple different queries such as raycasts, shapeCasts and collision checks need to traverse the tree structure to operate. 
 
 #### Classes involved in c++ source code:
 [`JPH::QuadTree`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/BroadPhase/QuadTree.h#L20), [`JPH:QuadTree:Node`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/BroadPhase/QuadTree.h#L97)
@@ -169,6 +169,4 @@ The Element class hierarchy is not actually defined because there are only 2 Ele
 
 ## 3. Summary
 
-In conclusion, the dependency analysis reveals that JoltPhysics is a highly modular engine with a well-defined layered architecture. Code dependencies properly flow towards highly cohesive, independent mathematical foundations. However, our behavioral analysis proves that developers must remain aware of implicit knowledge dependencies, because structural decoupling does not prevent logical coupling.
-
-Various instances of design patterns throughout the codebase are implemented in slightly less OOP-fashion, trading understandability and evolvability for better runtime performance. This aligns with the overall goal of providing a fast physics engine, despite sometimes making the code obscure and therfore more complex to work with.
+In conclusion, the dependency analysis reveals that JoltPhysics is a highly modular engine with a well-defined layered architecture. Code dependencies properly flow towards highly cohesive, independent mathematical foundations. However, our behavioral analysis proves that developers must remain aware of implicit knowledge dependencies, because structural decoupling does not prevent logical coupling. In a similar way various design patterns are used throughout the codebase to improve its design structure but their implementation is often non-standard, trading understandability and evolvability for better runtime performance. This aligns with the overall goal of providing an efficient physics engine, despite sometimes making the code obscure and therfore more complex to work with.
