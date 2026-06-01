@@ -82,9 +82,7 @@ There are many examples of functionalities that rely on a single instance to wor
 
 
 #### Classes involved in c++ source code:
-`JPH::Factory`, `JPH::Profiler`, `JPH::DeterminismLog`, `JPH::DebugRenderer` (independent uses of the pattern)
-
-// TODO: insert class diagram here (?)
+[`JPH::Factory`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Core/Factory.h#L13), [`JPH::Profiler`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Core/Profiler.h#L94), [`JPH::DeterminismLog`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/DeterminismLog.h#L21), [`JPH::DebugRenderer`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Renderer/DebugRenderer.h#L46) (independent uses of the pattern)
 
 #### Why is the pattern applied:
 All the classes involved are accessed at multiple different points of the system, without any particular cohesion among those callers; this makes sense since functionalities such as debug drawing, profiling, logging and a way to instantiate objects with a given type id (the case of `Factory`) are very likely to be widespread in the codebase. This creates the need to ensure that a single point of access to these functionalities is provided, and the **Singleton** pattern is a simple and effective enough solution.
@@ -101,10 +99,10 @@ When using the engine to simulate physics and collisions between bodies, handle 
 
 
 #### Classes involved in c++ source code:
-`JPH::PhysicsSystem` (facade), `JPH::BodyManager`, `JPH::ContactConstraintManager`, `JPH::ConstraintManager`, `JPH::BroadPhase`, `JPH::NarrowPhaseQuery`, `JPH::BodyInterface`, `JPH::PhysicsStepListener`... (subsystems)
+[`JPH::PhysicsSystem`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/PhysicsSystem.h#L29) (facade), [`JPH::BodyManager`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Body/BodyManager.h#L46), [`JPH::ContactConstraintManager`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Constraints/ContactConstraintManager.h#L31), [`JPH::ConstraintManager`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Constraints/ConstraintManager.h#L27), [`JPH::BroadPhase`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/BroadPhase/BroadPhase.h#L25), [`JPH::NarrowPhaseQuery`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/NarrowPhaseQuery.h#L22), [`JPH::BodyInterface`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Body/BodyInterface.h#L35), [`JPH::PhysicsStepListener`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/PhysicsStepListener.h#L22)... (subsystems)
 
-// TODO: insert class diagram here
-
+![](../analysis/patterns/images/facadeUML.svg)  
+*Img6: Facade pattern in Jolt.*
 
 #### Why is the pattern applied:
 The pattern is used because having a single access point to different etherogeneus features can provide very useful in a library, where the main application interacts with the physics engine code without having to deal with the underlying architecture, with less coupling between the app business-rules and the physics engine implementation (given that the `PhysicsSystem` provides a stable enough boundary).
@@ -121,9 +119,10 @@ The **Facade** is simply a very good choice for providing a single interface for
 The physics engine is able to simulate bodies that resemble different objects by using a variety of "shapes", such as Sphere, Box, Capsule, Plane... More complex objects (like humanoid characters, vehicles, or even large game-level scenaries) however are hardly reprisented by only one of such shapes, so a new one is defined to handle the conjunction of other child shapes. 
 
 #### Classes involved in c++ source code:
-`JPH::Shape`, `JPH::CompoundShape`, `JPH::StaticCompoundShape`, `JPH::MutableCompoundShape` (the last 2 are subclasses of CompoundShape: they are not directly involved in the pattern but are the only 2 concrete classes in the list)
+[`JPH::Shape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/Shape.h#L184), [`JPH::CompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/CompoundShape.h#L52), [`JPH::StaticCompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/StaticCompoundShape.h#L32), [`JPH::MutableCompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/MutableCompoundShape.h#L32) (the last 2 are subclasses of CompoundShape: they are not directly involved in the pattern but are the only 2 concrete classes in the list)
 
-![](../analysis/patterns/images/compositeUML.svg)
+![](../analysis/patterns/images/compositeUML.svg)  
+*Img7: Composite pattern in Jolt.*
 
 #### Why is the pattern applied:
 Since all operations that involve composite ("compound" in the codebase) shapes can be reconduced to a combination of operations on the children shapes, the **Composite** pattern provides a useful way of hiding this complexity from the outside. In this way operations are handled transparently and the whole hierarchy of shapes can be handled mostly uniformly (see below). 
@@ -138,7 +137,7 @@ Also differently than the standard implementation presented in literature, the `
 To speed-up physics operations, all objects ("bodies") in the scene are stored in a special tree-like structure where each node is either a group of 4 children nodes ("Nodes") or the body (actually the tree stores Ids used to retrieve the actual body data). Multiple different queries such as raycasts, shapeCasts and collision checks need to traverse the tree structure to operate. 
 
 #### Classes involved in c++ source code:
-`JPH::QuadTree`, `JPH::QuadTree::NodeID`, `JPH:BodyID`, `JPH:QuadTree:Node`
+[`JPH::QuadTree`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/BroadPhase/QuadTree.h#L20), [`JPH:QuadTree:Node`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/BroadPhase/QuadTree.h#L97)
 
 > Note:   
 > there are other occurrences of the **Visitor** pattern being used along with `CompoundShape` subclasses, but they were not the ones analysed as the `CompoundShape` is already of interest in the use of the **Composite** pattern.
@@ -146,13 +145,14 @@ To speed-up physics operations, all objects ("bodies") in the scene are stored i
 
 There are no close resemblances to the design patter just by looking at the classes involved (see considerations below), but in a fully-OOP setting the class diagram would look like this: 
 
-![](../analysis/patterns/images/visitorUML.svg)
+![](../analysis/patterns/images/visitorUML.svg)  
+*Img8: OOP Visitor pattern equivalent of Jolt implementation.*
 
-`QuadTreeElement` is the abstract "Element" with 2 concrete implementations:
+where `QuadTreeElement` is the abstract "Element" with 2 concrete implementations:
 - `Nodes` (a group of 4 `QuadTreeElements`)
 - `Body` (a leaf of the `QuadTree`)
 
-`Visitor` is the abstract "Visitor" with many concrete implementations:
+and `Visitor` is the abstract "Visitor" with many concrete implementations:
 - `CastRayVisitor`
 - `CastAABoxVisitor`
 - `CollideAABoxVisitor`
@@ -164,7 +164,7 @@ There are no close resemblances to the design patter just by looking at the clas
 The Element interface has just 2 concrete implementations, and there are already multiple operations that need to be performed on the structure: this means that it is better to have the operations (visitors) implement a different behaviour depending on the few concrete element types rather than each element implementing a different behaviour for each operation. At the same time the way the structure is navigated depends on the element type, so mixing the traversal function with the operations code would lead to the rapid degradation of maintainability. By using the **Visitor** pattern each independent query is segregated inside its own visitor, while the tree traversal code stays untouched.
 
 #### Considerations about pros/cons:
-The Element class hierarchy is not actually defined because there are only 2 Element types that will ever need to exist and the tree traversal doesn't happen recursively but with a stack-like data structure. Also the **Visitor** interface is missing and that is because all the queries are c++ template functions where a custom visitor is defined and implemented inside in combination with inlining. This means that no visitor will exist at all after compiling, which makes sense since physics queries are likely to be called hundreds or thousands of times per seconds, but comes at the cost of worse understandability of the code. 
+The Element class hierarchy is not actually defined because there are only 2 Element types that will ever need to exist and the tree traversal doesn't happen recursively but with a stack-like data structure. Also the **Visitor** interface is missing because each query is a c++ template function inside `QuadTree`, where a dfferent visitor is defined and implemented in combination with inlining. This means that no visitor will exist at all after compiling, which makes sense since physics queries are likely to be called hundreds or thousands of times per seconds, but comes at the cost of worse understandability of the code. 
 
 
 ## 3. Summary
