@@ -19,3 +19,6 @@ I reviewed my dependencies analysis. I did few changes for clarity in the notes.
 ## May 25 - 30
 I had a call with Nicola to coordinate how to merge my dependencies analysis with his architectural patterns section into the final report. I spent the rest of the week improving the visualization and structure of the document. To eliminate noise from the Doxygen analysis, I refactored the configuration by enforcing a strict maximum graph depth of 1, isolating direct architectural coupling. 
 I converted the unclear SVG graphs into clean, structured Mermaid diagrams, organizing files by their native submodules. To optimize the document's word count and enhance readability, I also transformed the Temporal Coupling data table into a Mermaid network graph. Finally, I refactored our organization's workspace by adding readme.
+
+## June 01 - 07
+I completed the final review of the design analysis. I finalized the report by reformatting all dependencies sections into a "inifinitive" and more formal style. 
