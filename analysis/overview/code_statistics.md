@@ -1,14 +1,12 @@
 # Codebase Statistics Analysis
 
-## Objective
-The objective of this analysis is to evaluate the size and composition of the Jolt Physics codebase. Understanding these metrics helps in estimating the system's complexity and supports the overview of the project.
+I analyzed the size and composition of the Jolt Physics codebase to better understand its overall complexity and structure. Understanding these metrics helps me estimate the scale of the system and provides context for the project overview.
 
 ---
 
 ## Methodology
 
-The analysis was performed using `cloc v2.08`.  
-Command executed:
+I performed this analysis using cloc v2.08 to measure the size and composition of the repository. I ran the following command from the root directory of the JoltPhysics repository:
 
 ```bash
 cloc .
@@ -20,12 +18,12 @@ Run from the root directory of the JoltPhysics repository.
 
 ## Results
 
-| Metric              | Value   |
-|---------------------|-------  |
-| Total files         | 1,195   |
-| Total lines of code | 138,100 |
-| Blank lines         | 32,768  |
-| Comment lines       | 28,511  |
+| Metric                      | Value   |
+|-----------------------------|-------  |
+| Total files                 | 1,195   |
+| Source lines of code (SLOC) | 138,100 |
+| Blank lines                 | 32,768  |
+| Comment lines               | 28,511  |
 
 ### Language Breakdown
 
@@ -49,8 +47,8 @@ Run from the root directory of the JoltPhysics repository.
 
 ## Observations
 
-- Most of the code is written in C++, which makes up about 62% of the total lines of code. This indicates that the system is designed with performance in mind.
-- A large portion of the code is in header files (over 43,000 lines), suggesting a modular structure where interfaces and implementations are separated.
+- I found that most of the code is written in C++, accounting for approximately 62% of the total source lines of code. According to the project documentation, deterministic execution and low-level control are important design goals, which aligns with the choice of C++ as the primary implementation language.
+- I also noticed that a large portion of the code is contained in header files (over 43,000 lines), suggesting a modular structure with a clear separation between interfaces and implementations.
 - The presence of HLSL, GLSL, and Metal files shows that the project includes some GPU related components.
 - The use of Objective C++ indicates support for Apple platforms such as macOS and iOS.
 - Build and scripting files (CMake, shell scripts, batch files, etc.) suggest that the project is designed to work across multiple platforms.
@@ -59,13 +57,5 @@ Run from the root directory of the JoltPhysics repository.
 
 ## Interpretation
 
-The size of the codebase (over 138,000 lines across 1,195 files) confirms that Jolt Physics can be considered a moderately large and complex system. This makes it suitable for detailed software design and architecture analysis.
-
-From the structure of the codebase, it appears to follow a layered organization:
-
-- **Low level modules** (Math/, Core/, Geometry/) provide basic functionality.
-- **Mid level modules** (Collision/, Constraints/, ObjectStream/) handle specific tasks like collision handling and constraints.
-- **High level modules** (Physics/, Character/, Vehicle/, SoftBody/) manage the overall physics simulation.
-
-This type of structure helps in maintaining modularity and makes the system easier to understand and extend.
+Based on the results, I consider Jolt Physics to be a moderately large and complex system. With more than 138,000 source lines of code distributed across 1,195 files, the project is large enough to provide meaningful architectural insights while still being manageable for detailed analysis.
 
