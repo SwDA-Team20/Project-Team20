@@ -17,4 +17,7 @@ After a discussion with the team we decided to include the other containers in t
 I finalized the new version of the container diagram and corrected the diagrams explainations to be coherent with the new diagram.
 
 ### 27/05/2026
-I reviewd the explanations on the context and container diagrams and fixed some minor mistakes, mostly in wording. Then i throughly reviewed the part about the relationship with the clean architecture running a few more analysis tests to review include dependecies. I finally almost completely rewrote that part to be more precise. 
+I reviewd the explanations on the context and container diagrams and fixed some minor mistakes, mostly in wording. Then i throughly reviewed the part about the relationship with the clean architecture running a few more analysis tests to review include dependecies. I finally almost completely rewrote that part to be more precise.
+
+### 04/06/2026
+I updated the context and container c4 diagrams to contain the technology field in all relationships as discussed with the professor at the review 

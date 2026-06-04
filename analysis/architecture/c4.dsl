@@ -15,9 +15,9 @@ workspace "Jolt Physics - C4 Architecture" {
             unitTests = container "UnitTests Executable" "Test executable used to validate the expected behavior of the Jolt Physics Library." "C++ executable"
         }
 
-        dev -> jolt "Uses public C++ API and documentation"
-        dev -> gameApp "Develops and configures"
-        gameApp -> jolt "Embeds and uses physics functionality" "C++ API/in-process calls"
+        dev -> jolt "Uses public C++ API and documentation" "C++ API / documentation"
+        dev -> gameApp "Develops and configures" "Source code"
+        gameApp -> jolt "Embeds and uses physics functionality" "C++ API/in-process calls" "C++ API / documentation"
 
         toolchain -> jolt "Builds and links" "CMake/C++17"
         jolt -> platform "Uses runtime services" "Threads, memory etc."
@@ -32,17 +32,17 @@ workspace "Jolt Physics - C4 Architecture" {
         performanceTest -> joltLib "Uses the physics engine to execute benchmark scenes" "C++ API/in-process calls"
         unitTests -> joltLib "Tests and verifies library behavior" "C++ API/in-process calls"
         
-        performanceTest -> joltViewer "Produces simulation outputs that can be visualized" 
+        performanceTest -> joltViewer "Produces simulation outputs that can be visualized" ".jor recording files"
         
         toolchain -> samplesApp "Builds executable" "C++17 / CMake"
         toolchain -> joltViewer "Builds executable" "C++17 / CMake"
         toolchain -> performanceTest "Builds executable" "C++17 / CMake"
         toolchain -> unitTests "Builds executable" "C++17 / CMake"
         
-        samplesApp -> platform "Uses runtime services" 
-        joltViewer -> platform "Uses runtime services" 
-        performanceTest -> platform "Uses runtime services" 
-        unitTests -> platform "Uses runtime services" 
+        samplesApp -> platform "Uses runtime services" "Windowing, input, graphics, threads, memory"
+        joltViewer -> platform "Uses runtime services" "Windowing, input, graphics, threads, memory"
+        performanceTest -> platform "Uses runtime services" "CPU, memory, threads"
+        unitTests -> platform "Uses runtime services" "CPU, memory, threads"
         
         
         
