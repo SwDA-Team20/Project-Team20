@@ -1,19 +1,15 @@
 # Codebase Statistics Analysis
 
-I analyzed the size and composition of the Jolt Physics codebase to better understand its overall complexity and structure. Understanding these metrics helps me estimate the scale of the system and provides context for the project overview.
-
+This analysis examines the size and composition of the Jolt Physics codebase to better understand its overall complexity and structure. These metrics help estimate the scale of the system and provide useful context for the project overview.
 ---
 
 ## Methodology
 
-I performed this analysis using cloc v2.08 to measure the size and composition of the repository. I ran the following command from the root directory of the JoltPhysics repository:
+The analysis was performed using cloc v2.08 to measure the size and composition of the repository. The following command was executed from the root directory of the JoltPhysics repository:
 
 ```bash
 cloc .
 ```
-
-Run from the root directory of the JoltPhysics repository.
-
 ---
 
 ## Results
@@ -47,17 +43,17 @@ Run from the root directory of the JoltPhysics repository.
 
 ## Observations
 
-- I found that most of the code is written in C++, accounting for approximately 62% of the total source lines of code. According to the project documentation, deterministic execution and low-level control are important design goals, which aligns with the choice of C++ as the primary implementation language.
-- I also noticed that a large portion of the code is contained in header files (over 43,000 lines), suggesting a modular structure with a clear separation between interfaces and implementations.
-- I also found HLSL, GLSL, and Metal files within the repository, indicating the presence of platform specific shader and graphics-related components.
-- The use of Objective C++ indicates support for Apple platforms such as macOS and iOS.
-- Build and scripting files (CMake, shell scripts, batch files, etc.) suggest that the project is designed to work across multiple platforms.
+- Most of the code is written in C++, accounting for approximately 62% of the total source lines of code. According to the project documentation, deterministic execution and low-level control are important design goals, which helps explain why C++ is the primary implementation language.
+- A large portion of the code is contained in header files (over 43,000 lines), suggesting a modular structure with a clear separation between interfaces and implementations.
+- HLSL, GLSL, and Metal files are present in the repository, indicating the use of platform-specific shader and graphics-related components.
+- The use of Objective-C++ indicates support for Apple platforms such as macOS and iOS.
+- Build and scripting files (CMake, shell scripts, batch files, and others) suggest that the project is designed to support multiple platforms.
 
 ---
 
 ## Interpretation
 
-Based on the results, I consider Jolt Physics to be a moderately large and complex system. With more than 138,000 source lines of code distributed across 1,195 files, the project is large enough to provide meaningful architectural insights while still being manageable for detailed analysis.
+The results show that Jolt Physics is a moderately large and complex system. With more than 138,000 source lines of code spread across 1,195 files, the project is large enough to provide meaningful architectural insights while still being manageable for detailed analysis.
 
-I also observed that C++ and C/C++ header files together account for the vast majority of the codebase. This aligns with the project's focus on performance, deterministic execution, and low-level control. The presence of platform specific files, shader code, and build scripts further suggests that the engine is designed to support a wide range of platforms and deployment environments.
+C++ and C/C++ header files account for the vast majority of the codebase. This aligns with the project's focus on performance, deterministic execution, and low-level control. The presence of platform-specific files, shader code, and build scripts further suggests that the engine is designed to support a wide range of platforms and deployment environments.
 
