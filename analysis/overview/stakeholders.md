@@ -1,12 +1,13 @@
 # Stakeholder Analysis
 
-I identified the main stakeholders by reading `README.md`, `Docs/ProjectsUsingJolt.md`, and `Docs/Architecture.md`.
+The main stakeholders were identified by reviewing `README.md`, `Docs/ProjectsUsingJolt.md`, and `Docs/Architecture.md`.
 
-The most prominent users are AAA game studios Guerrilla Games used Jolt in Horizon Forbidden West and Kojima Productions in Death Stranding 2. What surprised me is how many open-source engines have also adopted it. Godot (since v4.4), Wicked Engine, ezEngine, and about 20 others listed in `ProjectsUsingJolt.md`.
+The most prominent commercial users are Guerrilla Games, which used Jolt in Horizon Forbidden West, and Kojima Productions, which used it in Death Stranding 2. Beyond AAA studios, a large number of open-source game engines have also adopted Jolt, including Godot (since v4.4), Wicked Engine, and ezEngine, with roughly 20 projects listed in `ProjectsUsingJolt.md`. One reason for this broad adoption is likely the project's MIT license, which allows both commercial and open-source projects to use the engine without restrictive licensing requirements.
 
-This range of users from large studios to indie developers to engine teams means the project has to satisfy very different requirements at once. Studios need deterministic, high performance simulation. Engine teams need long term API stability. Indie devs
-need good documentation and easy integration. The fact that Jolt serves all three suggests it has found a good balance between performance and usability.
+Based on the identified users, three broad stakeholder groups emerge, each with different requirements:
 
-One thing I noticed specifically is that multiplayer games like War Thunder (Dagor Engine) and X4 Foundations depend on physics determinism so that the simulation stays synchronized across clients. This is an important requirement for multiplayer games and explains why determinism is treated as a first-class feature in the codebase, not as an afterthought.
+* **AAA and professional game studios** require deterministic, high-performance simulation. For these teams, correctness and raw throughput are primary concerns.
+* **Engine teams and open-source integrators** require long-term API stability and clean integration boundaries, since frequent interface changes can create significant maintenance overhead across larger codebases.
+* **Independent developers and smaller teams** require accessible documentation and a straightforward integration process.
 
-Jorrit Rouwé is still the main maintainer and reviewer of the project. Even though the project has many contributors, a large part of the responsibility still depends on a single person.
+A notable observation is the inclusion of multiplayer games such as War Thunder (Dagor Engine) and X4 Foundations in the project's user list. In multiplayer physics, simulations must produce identical results across different machines and runs to keep the game state synchronized across clients. This requirement cannot easily be introduced later in development and must be considered from the beginning, helping explain why determinism is treated as a core design goal of the project.
