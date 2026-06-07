@@ -78,14 +78,14 @@ The 4 design patterns that have been identified inside the Jolt system and are a
 ### 2.2 Singleton
 
 #### Context:
-There are many examples of functionalities that rely on a single instance to work, such as object creation/serialization of objects, profiling, logging and rendering debug gizmos, all needing to be accessed from a single point across different parts of the codebase.
+There are many examples of functionalities that rely on a single instance to work, such as creation/serialization of objects, profiling, logging and rendering debug gizmos, all needing to be used through a single access point but from different parts of the codebase.
 
 
 #### Classes involved in c++ source code:
 [`JPH::Factory`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Core/Factory.h#L13), [`JPH::Profiler`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Core/Profiler.h#L94), [`JPH::DeterminismLog`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/DeterminismLog.h#L21), [`JPH::DebugRenderer`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Renderer/DebugRenderer.h#L46) (independent uses of the pattern)
 
 #### Why is the pattern applied:
-All the classes involved are accessed at multiple different points of the system, without any particular cohesion among those callers; this makes sense since functionalities such as debug drawing, profiling, logging and a way to instantiate objects with a given type id (the case of `Factory`) are very likely to be widespread in the codebase. This creates the need to ensure that a single point of access to these functionalities is provided, and the **Singleton** pattern is a simple and effective enough solution.
+All the classes involved are accessed from multiple different points of the system, without any particular cohesion among those callers; this makes sense since functionalities such as debug drawing, profiling, logging and a way to instantiate objects with a given type id (the case of `Factory`) are very likely to be widespread in the codebase. This creates the need to ensure that a single point of access to these functionalities is provided, and the **Singleton** pattern is a simple and effective enough solution.
 
 
 #### Considerations about pros/cons:
@@ -95,7 +95,7 @@ The problem lies in the static instance being accessed explicitly with the use o
 ### 2.3 Facade
 
 #### Context:
-When using the engine to simulate physics and collisions between bodies, handle callbacks and perform queries against the scene, many different subsystems need to be called to interact with various aspect of the system, so a `PhysicsSystem` class is used as a **Facade** to redirect each external call to the appropriate subsystem operation. 
+When using the engine to simulate physics and collisions between bodies, handle callbacks and perform queries against the scene, many different subsystems need to be called to interact with various different functionalities, so a `PhysicsSystem` class is used as a **Facade** to redirect each external call to the appropriate subsystem operation. 
 
 
 #### Classes involved in c++ source code:
@@ -116,7 +116,7 @@ The **Facade** is simply a very good choice for providing a single interface for
 ### 2.4 Composite
 
 #### Context:
-The physics engine is able to simulate bodies that resemble different objects by using a variety of "shapes", such as Sphere, Box, Capsule, Plane... More complex objects (like humanoid characters, vehicles, or even large game-level scenaries) however are hardly reprisented by only one of such shapes, so a new one is defined to handle the conjunction of other child shapes. 
+The physics engine is able to simulate bodies that resemble different objects by using a variety of "shapes", such as Sphere, Box, Capsule, Plane... More complex objects (like humanoid characters, vehicles, or even large game-level scenaries) however are hardly reprisented by only one of such shapes, so a new one is defined to handle the conjunction of multiple child shapes. 
 
 #### Classes involved in c++ source code:
 [`JPH::Shape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/Shape.h#L184), [`JPH::CompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/CompoundShape.h#L52), [`JPH::StaticCompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/StaticCompoundShape.h#L32), [`JPH::MutableCompoundShape`](https://github.com/SwDA-Team20/JoltPhysics/blob/05fcfbf7b5019f59c43a4829225d681536e8e416/Jolt/Physics/Collision/Shape/MutableCompoundShape.h#L32)
@@ -169,4 +169,4 @@ The Element class hierarchy is not actually defined because there are only 2 Ele
 
 ## 3. Summary
 
-In conclusion, the dependency analysis reveals that JoltPhysics is a highly modular engine with a well-defined layered architecture. Code dependencies properly flow towards highly cohesive, independent mathematical foundations. However, our behavioral analysis proves that developers must remain aware of implicit knowledge dependencies, because structural decoupling does not prevent logical coupling. In a similar way various design patterns are used throughout the codebase to improve its design structure but their implementation is often non-standard, trading understandability and evolvability for better runtime performance. This aligns with the overall goal of providing an efficient physics engine, despite sometimes making the code obscure and therfore more complex to work with.
+In conclusion, the dependency analysis reveals that JoltPhysics is a highly modular engine with a well-defined layered architecture. Code dependencies properly flow towards highly cohesive, independent mathematical foundations. However, our behavioral analysis proves that developers must remain aware of implicit knowledge dependencies, because structural decoupling does not prevent logical coupling. In a similar way various design patterns are used throughout the codebase to improve its structure but their implementation is often non-standard, trading understandability and evolvability for better runtime performance. This aligns with the overall goal of providing an efficient physics engine, despite sometimes making the code obscure and therfore more complex to work with.

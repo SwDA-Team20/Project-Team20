@@ -42,3 +42,8 @@ Finished facade analysis and merged all four patterns notes inside a single .md 
 # 2026/05/31
 
 After the merge of patterns and dependencies on friday, I polished the pattern sections with some code highlighting and I rewrote some sections to stay under the word limit. Some diagrams were corrected and aside from some more polish of the patterns sections, only the UML diagrams are missing. I have to decide if the Singleton diagram is worthy of inclusion, since it doesn't really provide any useful information.
+
+
+# 2026/06/07
+
+After reviewing the design patterns analysis one last time and applying some minor changes to its wording, I believe this part is complete.
