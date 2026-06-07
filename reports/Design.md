@@ -59,7 +59,7 @@ While they do not include each other, they are logically coupled because they im
 
 ### 1.4 Quantitative Analysis
 
-The Python [scripts](../analysis/dependencies/scripts/analyze_inconsistencies.py) applied, provided a comprehensive quantitative view, by cross-referencing the static analysis (1925 code dependencies) with the behavioral dataset. Out of the 171 highly coupled architectural pairs extracted from CodeScene, the script isolated [135](../analysis/dependencies/scripts/inconsistencies_found.csv) architectural inconsistencies:
+The Python [scripts](../analysis/dependencies/scripts/analyze_inconsistencies.py) applied provided a comprehensive quantitative view by cross-referencing the static analysis (1925 code dependencies) with the behavioral dataset. Out of the 171 highly coupled architectural pairs extracted from CodeScene, the script isolated [135](../analysis/dependencies/scripts/inconsistencies_found.csv) architectural inconsistencies:
 
 1.  **High Code / High Knowledge:** Exactly 36 pairs (approx. 20%) of the highly co-changed modules fall here. These are tightly coupled subsystems where structural links (`#include`) properly document the need for simultaneous updates. *(Note: CodeScene inherently filters out trivial `.cpp`/`.h` couplings, keeping this number representative of true cross-module links).*
 2.  **High Code / Low Knowledge:** Modules like core math headers exhibit massive afferent coupling (included across the 1925 static links) but zero temporal coupling, proving the foundation layers are extremely stable and decoupled from behavioral volatility.
