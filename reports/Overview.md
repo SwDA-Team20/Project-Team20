@@ -98,6 +98,12 @@ The core implementation of Jolt Physics is located in the `Jolt/` directory, whi
 | Other              | 19    | Platform and miscellaneous   |
 | **Total**          | **513** |                            |
 
+
+![Module Layered Structure](../analysis/overview/images/module_layers.png)
+
+*Fig 1: Layered organization of the Jolt/ core library modules.*
+
+
 The largest module is `Physics/`, which contains most of the simulation logic, including collision detection, constraints, character controllers, vehicle systems, and soft body simulation. With 265 files, it accounts for more than half of the core library.
 
 Several smaller modules provide supporting functionality. `Core/` contains utilities related to memory management and threading, while `Math/` and `Geometry/` provide the mathematical and geometric functionality used throughout the engine. Other modules such as `ObjectStream/`, `Skeleton/`, `Renderer/`, and `Compute/` provide serialization, animation support, debugging tools, and GPU-related features.
