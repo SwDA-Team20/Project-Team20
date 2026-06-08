@@ -4,20 +4,20 @@ The internal structure of the `Jolt/` directory was examined using PowerShell fi
 
 The core library (`Jolt/`) contains 11 top-level modules with a total of 513 files. Most of these files are concentrated within the `Physics/` module, which alone contains 265 files (96 .cpp and 169 .h files). This represents more than half of the entire core library.
 
-| Module           | Number of Files |
-|------------------|-----------------|
-| Physics          | 265             |
-| Core             | 68              |
-| Compute          | 46              |
-| Geometry         | 27              |
-| Math             | 25              |
-| ObjectStream     | 23              |
-| Renderer         | ~10             |
-| Skeleton         | ~10             |
-| AABBTree         | ~10             |
-| TriangleSplitter | ~10             |
-| Other            | ~19             |
-| **Total**        | **513**         |
+| Module             | Files | Role                         |
+|--------------------|------:|------------------------------|
+| Physics/           | 265   | Main simulation pipeline     |
+| Core/              | 68    | Memory, threading, utilities |
+| Compute/           | 46    | GPU compute workloads        |
+| Geometry/          | 27    | Geometric primitives         |
+| Math/              | 25    | Math types and operations    |
+| ObjectStream/      | 23    | Serialization                |
+| Renderer/          | 8     | Debug visualization          |
+| Skeleton/          | 8     | Skeletal animation support   |
+| AABBTree/          | 5     | Bounding volume hierarchy    |
+| TriangleSplitter/  | 6     | Mesh processing              |
+| Other              | 19    | Platform and miscellaneous   |
+| **Total**          | **513** |                            |
 
 Within the `Physics/` module, the largest submodule is `Collision/`, which contains collision detection logic and shape handling functionality. This submodule is further divided into directories such as `BroadPhase/` and `Shape/`, where different collision algorithms and shape implementations are maintained.
 
