@@ -21,5 +21,6 @@
 
 ## June 01 – 07
 
-I reviewed all Overview analysis files and refined them based on feedback. I improved the Stakeholder, Module Structure, Codebase Statistics, and System Purpose analyses by removing redundant information, adding missing project context, and making the writing more consistent. I also reorganized some sections to better align with the requirements of the Overview chapter.
-I finalized the Overview section and integrated the findings from my analysis work into the report. 
+- I reviewed all Overview analysis files and refined them based on feedback. I improved the Stakeholder, Module Structure, Codebase Statistics, and System Purpose analyses by removing redundant information, adding missing project context, and making the writing more consistent. I also reorganized some sections to better align with the requirements of the Overview chapter.
+- I finalized the Overview section and integrated the findings from my analysis work into the report. 
+- Added a module layered structure diagram (Fig 1) to the Overview report showing the three-tier organization of the Jolt/ core library
